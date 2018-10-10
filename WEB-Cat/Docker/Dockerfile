@@ -12,7 +12,6 @@ RUN sed -i 's/port="8080"/port="80"/' /usr/local/tomcat/conf/server.xml
 
 #Install WEB-Cat
 COPY config /
-COPY mysql /
 RUN rm -rf /usr/local/tomcat/webapps/ROOT; \
 	wget https://sourceforge.net/projects/web-cat/files/latest/download -O /usr/local/tomcat/webapps/ROOT.war; \
 	mkdir /usr/local/tomcat/webapps/ROOT;\
