@@ -1,0 +1,39 @@
+{
+    attributes = (
+        {
+            columnName = contents; 
+            name = contents; 
+            prototypeName = mutableDictionary; 
+            userInfo = {
+                adaptorValueConversionMethodName = archiveData; 
+                isMutable = true; 
+                valueClassName = "org.webcat.core.MutableDictionary"; 
+                valueFactoryMethodName = objectWithArchiveData; 
+            }; 
+        }, 
+        {name = id; prototypeName = id; }, 
+        {columnName = theIndex; name = index; prototypeName = integer; }, 
+        {columnName = batchResultId; name = batchResultId; prototypeName = foreignId; }, 
+        {columnName = tag; name = tag; prototypeName = tinyText; }, 
+        {
+            name = updateMutableFields; 
+            prototypeName = updateMutableFields; 
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
+        }
+    ); 
+    attributesUsedForLocking = (index, batchResultId, tag, updateMutableFields); 
+    className = "org.webcat.batchprocessor.BatchResultProperty"; 
+    classProperties = (contents, index, batchResult, tag, updateMutableFields); 
+    externalName = BatchResultProperty; 
+    fetchSpecificationDictionary = {}; 
+    name = BatchResultProperty; 
+    primaryKeyAttributes = (id); 
+    relationships = (
+        {
+            destination = BatchResult; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = batchResultId; }); 
+            name = batchResult; 
+        }
+    ); 
+}

@@ -1,0 +1,2 @@
+JavaTddPlugin/ filter=lfs diff=lfs merge=lfs -text
+BatchPlugin filter=lfs diff=lfs merge=lfs -text

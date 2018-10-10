@@ -1,0 +1,176 @@
+<wo name="Page">
+<wo name="Form">
+
+<wo:WCPageModule title="Published Batch Plug-ins (Available to Everyone)">
+
+<!--
+    Displays the table of published batch plug-ins if any exist.
+-->
+<wo:if condition="$publishedPluginsGroup.displayedObjects.count">
+    <div class="shadow"><table><thead>
+    <tr>
+        <th>Published Batch Plug-ins
+            <wo:if condition="$terse"><wo name="VerboseDescriptions"/></wo:if>
+            <wo:else><wo name="TerseDescriptions"/></wo:else>
+        </th>
+        <th class="sm">Upload Date</th>
+        <th>Will Update?</th>
+        <th>Action</th>
+    </tr></thead><tbody>
+    <wo:loop list="$publishedPluginsGroup.displayedObjects" item="$batchPlugin" index="$index">
+        <wo:tr index="$index">
+            <td>
+                <b><wo:str value="$batchPlugin.name"/></b> (version <wo:str value="$batchPlugin.descriptor.currentVersion"/>)
+                <wo:not condition="$terse"><br/>
+                    <b>Installed by:</b> <wo:str value="$batchPlugin.author.nameAndUid"/><br/>
+                    <b>Description:</b> <wo:str value="$batchPlugin.configDescription.description" escapeHTML="$false"/>
+                </wo:not>
+            </td>
+            <td><wo name="Date"/></td>
+            <td class="s">&nbsp;</td>
+            <td style="white-space:nowrap">
+                <wo:if condition="$canEditPlugin">
+                    <webobject name="DownloadNow"/>
+                    <webobject name="Unpublish"/>
+                </wo:if>
+                <webobject name="EditFiles"/>
+                <wo:if condition="$canEditPlugin">
+                    <wo:if condition="$batchPlugin.configDescription.globalOptions.count">
+                        <webobject name="EditGlobalOptions"/>
+                    </wo:if>
+                    <webobject name="ReloadConfig"/>
+                </wo:if>
+            </td>
+        </wo:tr>
+    </wo:loop>
+</tbody></table></div>
+<div class="spacer">&nbsp;</div>
+</wo:if><wo:else>
+    <p><span class="hl">No published batch plug-ins</span> have been installed.</p>
+</wo:else>
+
+</wo:WCPageModule>
+
+<!--
+    Displays the list of all unpublished batch plug-ins if the current user
+    has administrator privileges.
+-->
+<wo:if condition="$user.hasAdminPrivileges">
+    <wo:WCPageModule title="Unpublished Batch Plug-ins (for Individual Use)">
+    <wo:if condition="$unpublishedPluginsGroup.displayedObjects.count">
+        <div class="shadow"><table><thead>
+        <tr>
+            <th>Unpublished Batch Plug-ins
+                <wo:if condition="$terse"><wo name="VerboseDescriptions"/></wo:if>
+                <wo:else><wo name="TerseDescriptions"/></wo:else>
+            </th>
+            <th class="sm">Upload Date</th>
+            <th>Will Update?</th>
+            <th>Action</th>
+        </tr></thead><tbody>
+        <wo:loop list="$unpublishedPluginsGroup.displayedObjects" item="$batchPlugin" index="$index">
+            <wo:tr index="$index">
+                <td>
+                    <b><wo:str value="$batchPlugin.name"/></b> (version <wo:str value="$batchPlugin.descriptor.currentVersion"/>)
+                    <wo:not condition="$terse"><br/>
+                        <b>Installed by:</b> <wo:str value="$batchPlugin.author.nameAndUid"/><br/>
+                        <b>Description:</b> <wo:str value="$batchPlugin.configDescription.description" escapeHTML="$false"/>
+                    </wo:not>
+                </td>
+                <td><wo name="Date"/></td>
+                <td class="s">&nbsp;</td>
+                <td style="white-space:nowrap">
+                    <wo:if condition="$canEditPlugin">
+                        <wo:if condition="$canDownload">
+                            <webobject name="DownloadNow"/>
+                        </wo>
+                        <webobject name="Publish"/>
+                        <webobject name="EditFiles"/>
+                        <wo:if condition="$batchPlugin.configDescription.globalOptions.count">
+                            <webobject name="EditGlobalOptions"/>
+                        </wo:if>
+                        <webobject name="ReloadConfig"/>
+                    </wo:if>
+                </td>
+            </wo:tr>
+        </wo:loop>
+        </tbody></table></div>
+        <div class="spacer">&nbsp;</div>
+    </wo:if>
+    <wo:else>
+        <p><span class="hl">No unpublished batch plug-ins</span> have been installed.</p>
+    </wo:else>
+    </wo:WCPageModule>
+</wo:if>
+
+<!--
+    If the current user does not have administrator privileges, then only
+    display the list of unpublished batch plug-ins for that user.
+-->
+<wo:else>
+    <wo:WCPageModule title="Personal Batch Plug-ins (for Your Individual Use)">
+    <wo:if condition="$personalPluginsGroup.displayedObjects.count">
+        <div class="shadow"><table><thead>
+        <tr>
+            <th>Your Personal Batch Plug-ins
+                <wo:if condition="$terse"><wo name="TerseDescriptions"/></wo:if>
+                <wo:else><wo name="VerboseDescriptions"/></wo:else>
+            </th>
+            <th class="sm">Upload Date</th>
+            <th>Will Update?</th>
+            <th>Action</th>
+        </tr></thead><tbody>
+        <wo:loop list="$personalPluginsGroup.displayedObjects" item="$batchPlugin" index="$index">
+            <wo:tr index="$index">
+                <td>
+                    <b><wo:str value="$batchPlugin.name"/></b> (version <wo:str value="$batchPlugin.descriptor.currentVersion"/>)
+                    <wo:not condition="$terse"><br/>
+                        <b>Installed by:</b> <wo:str value="$batchPlugin.author.nameAndUid"/><br/>
+                        <b>Description:</b> <wo:str value="$batchPlugin.configDescription.description" escapeHTML="$false"/>
+                    </wo:not>
+                </td>
+                <td><wo name="Date"/></td>
+                <td class="s">&nbsp;</td>
+
+                <td style="white-space:nowrap">
+                    <wo:if condition="$canDownload">
+                        <webobject name="DownloadNow"/>
+                    </wo:if>
+                    <wo:if condition="$batchPlugin.isPublished"><wo name="Unpublish"/></wo:if>
+                    <wo:else><wo name="Publish"/></wo:else>
+                    <webobject name="EditFiles"/>
+                    <wo:if condition="$batchPlugin.configDescription.globalOptions.count">
+                        <webobject name="EditGlobalOptions"/>
+                    </wo:if>
+                    <webobject name="ReloadConfig"/>
+                </td>
+
+                <td style="white-space:nowrap">
+                    <wo name="DownloadNow"/>
+                    <wo:if condition="$batchPlugin.isPublished"><wo name="Unpublish"/></wo:if>
+                    <wo:else><wo name="Publish"/></wo:else>
+                </td>
+            </wo:tr>
+        </wo:loop>
+        </tbody></table></div>
+        <div class="spacer">&nbsp;</div>
+    </wo:if>
+    <wo:else>
+        <p>You have not yet installed any personal batch plug-ins.</p>
+    </wo:else>
+    </wo:WCPageModule>
+</wo:else>
+
+<wo:WCPageModule title="Upload a New Batch Plug-in">
+<p>
+Upload a new plug-in: <wo name="PluginUpload"/>
+</p>
+<p><wo name="Upload"/></p>
+<p>
+A plug-in is packaged as a zip or jar file that contains meta-data describing
+the plug-in's capabilities and configuration scheme.
+</p>
+</wo:WCPageModule>
+
+</wo>
+</wo>

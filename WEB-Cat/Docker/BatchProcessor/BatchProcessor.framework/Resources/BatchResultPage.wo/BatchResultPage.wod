@@ -1,0 +1,15 @@
+Page: WCPageWithJobMonitoring {
+    job           = result.batchJob;
+    title         = "Your Batch Results";
+    extraRequires = "dojox.layout.ContentPane";
+    delegate      = self;
+//    permalink = submission.permalink;
+}
+
+FeedbackSectionContent: WOGenericContainer {
+    elementName = "div";
+    dojoType    = "dojox.layout.ContentPane";
+    href        = feedbackSectionResourceURL;
+    adjustPaths = true;
+    preload     = true;
+}

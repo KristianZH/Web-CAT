@@ -1,0 +1,15 @@
+OptionEditor: org.webcat.core.OptionSetEditor {
+    options           = plugin.configDescription.globalOptions;
+    optionValues      = plugin.globalConfigSettings;
+    categories        = plugin.configDescription.GlobalOptionCategories;
+    verboseOptionsKey = "EditBatchPluginPageNoVerboseOptions";
+    browsePageName    = "EditBatchPluginFilesPage";
+    base              = baseDir;
+}
+
+Page: org.webcat.core.SaveCancelPage {
+}
+
+PluginName: WOString {
+    value = plugin.displayableName;
+}

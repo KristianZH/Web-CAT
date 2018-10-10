@@ -1,0 +1,100 @@
+{
+    name             = "MossBatchPlugin";
+    batchEntity      = Submission;
+    version.major    = 1;
+    version.minor    = 0;
+    version.revision = 1;
+    version.date     = 20160828;
+    requires         = ( ANTForPlugins, PerlForPlugins );
+    provider         = "Virginia Tech Computer Science";
+    provider.url     = "http://web-cat.org/updates";
+    license          = "GNU General Public License v.3";
+    license.url      = "http://www.gnu.org/copyleft/gpl.html";
+    copyright        = "(c) 2013-2016 Virginia Tech Department of Computer Science";
+    info.url         = "http://wiki.web-cat.org/WCWiki/SampleBatchPlugin";
+    history.url      = "http://wiki.web-cat.org/WCWiki/SampleBatchPlugin/ChangeHistory";
+    executable       = execute.pl;
+    interpreter.prefix = "${PerlForPlugins.perl.exe}";
+    author           = "Patrick VanMetre (jpvanmetre@me.com)";
+    authorUid        = vanmetre;
+    description =
+  "This batch plugin collects multiple student submissions and sends them to
+  MOSS for plagiarism detection.";
+    options = (
+        {
+            property    = language;
+            type        = shortText;
+            default     = "java";
+            size        = 25;
+            name        = "Source Code Language";
+            description =
+  "Indicate the programming language used in the student source files.  MOSS
+  currently supports the following choices: \"c\", \"cc\" (for C++), \"java\",
+  \"ml\", \"pascal\", \"ada\", \"lisp\", \"scheme\", \"haskell\", \"fortran\",
+  \"ascii\", \"vhdl\", \"perl\", \"matlab\", \"python\", \"mips\", \"prolog\",
+  \"spice\", \"vb\", \"csharp\", \"modula2\", \"a8086\", \"javascript\", and
+  \"plsql\".";
+        },
+        {
+            property    = maxmatches;
+            type        = integer;
+            default     = 10;
+            name        = "Maximum Occurrences to Consider";
+            description =
+  "This option sets the maximum number of times a given passage may appear
+  before it is ignored.  A passage of code that appears in many programs
+  is probably legitimate sharing and not the result of plagiarism.  By
+  specifying a maximum of N,
+  any passage appearing in more than N programs is treated as if it appeared in
+  a base file (i.e., it is never reported).  This option can be used to control
+  MOSS' sensitivity.  With a maximum of 2, moss reports only passages that
+  appear in exactly two programs.  If one expects many very similar solutions
+  (e.g., the short first assignments typical of introductory programming
+  courses) then using a value of 3 or 4 is a good way to eliminate all but
+  truly unusual matches between programs while still being able to detect
+  3-way or 4-way plagiarism.  With a value of 1000000 (or any very
+ large number), moss reports all matches, no matter how often they appear.";
+        },
+        {
+            property    = pairs;
+            type        = integer;
+            default     = 250;
+            name        = "Number of Matching Pairs";
+            description =
+  "This option specifies the number of matching pairs (students) to show in the
+  results.  The default is 250 (i.e., only the 250 highest-similarity pairs
+  will be shown).";
+        },
+        {
+            property    = experimental;
+            type        = boolean;
+            default     = false;
+            name        = "Use Experimental Server";
+            description =
+  "This option will send queries to the current experimental version of the
+  MOSS server. The experimental server has the most recent MOSS features and
+  is also usually less stable (read: may have more bugs).";
+        },
+        {
+            property    = debug;
+            type        = integer;
+            advanced    = true;
+            default     = 0;
+            name        = "Debug Level";
+            description =
+  "Set to a non-zero value for the script to produce debugging output (the
+  larger the number, the greater the detail, up to about 5).  Debugging output
+  on each grading script run will be e-mailed to the instructor.";
+        }
+    );
+    globalOptions = (
+        {
+            property    = mossUserToken;
+            type        = shortText;
+            name        = "MOSS User Token";
+            size = 20;
+            description =
+  "The authentication token used to connect to MOSS.";
+        }
+    );
+}

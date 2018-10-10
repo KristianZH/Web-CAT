@@ -1,0 +1,17 @@
+{
+  staff = {
+    children = {
+      Grading = {
+        accessLevel = 40;
+        priority = 200;
+        children = {
+          "Batch Actions" = {
+            pageName   = org.webcat.batchprocessor.PickBatchPluginToRunPage;
+            accessLevel = 50;
+            priority   = 100;
+          };
+        };
+      };
+    };
+  };
+}

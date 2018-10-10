@@ -1,0 +1,50 @@
+{
+    allPluginsOrderedByName = {
+        class = WCFetchSpecification;
+        entityName = BatchPlugin;
+        prefetchingRelationshipKeyPaths = ();
+        sortOrderings = (
+            {
+                class = EOSortOrdering;
+                key = name;
+                selectorName = compareCaseInsensitiveAscending;
+            }
+        );
+    };
+    pluginsForUser = {
+        class = WCFetchSpecification;
+        entityName = BatchPlugin;
+        prefetchingRelationshipKeyPaths = ();
+        qualifier = {
+            class = EOKeyValueQualifier;
+            key = author;
+            selectorName = "isEqualTo:";
+            value = {"_key" = user; class = EOQualifierVariable; };
+        };
+        sortOrderings = (
+            {
+                class = EOSortOrdering;
+                key = name;
+                selectorName = compareCaseInsensitiveAscending;
+            }
+        );
+    };
+    publishedPlugins = {
+        class = WCFetchSpecification;
+        entityName = BatchPlugin;
+        prefetchingRelationshipKeyPaths = ();
+        qualifier = {
+            class = EOKeyValueQualifier;
+            key = isPublished;
+            selectorName = "isEqualTo:";
+            value = {class = NSNumber; value = 1; };
+        };
+        sortOrderings = (
+            {
+                class = EOSortOrdering;
+                key = name;
+                selectorName = compareCaseInsensitiveAscending;
+            }
+        );
+    };
+}

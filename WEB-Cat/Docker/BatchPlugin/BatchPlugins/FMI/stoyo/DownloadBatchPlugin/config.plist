@@ -1,0 +1,39 @@
+{
+    name             = "DownloadBatchPlugin";
+    displayableName  = "Download Submissions";
+    batchEntity      = Submission;
+    version.major    = 1;
+    version.minor    = 0;
+    version.revision = 1;
+    version.date     = 20120306;
+    requires         = ( ANTForPlugins, PerlForPlugins );
+    provider         = "Virginia Tech Computer Science";
+    provider.url     = "http://web-cat.org/updates";
+    license          = "GNU Affero General Public License v.3";
+    license.url      = "http://www.gnu.org/licenses/agpl.html";
+    copyright        =
+        "(c) 2011-2012 Virginia Tech Department of Computer Science";
+    info.url         = "http://wiki.web-cat.org/WCWiki/DownloadBatchPlugin";
+    history.url      =
+        "http://wiki.web-cat.org/WCWiki/DownloadBatchPlugin/ChangeHistory";
+    executable       = execute.pl;
+    interpreter.prefix = "${PerlForPlugins.perl.exe}";
+    author           = "Stephen Edwards (edwards@cs.vt.edu)";
+    authorUid        = edwards;
+    description =
+  "This is a batch plug-in that builds a single downloadable zip file from
+  the submissions of all students.";
+    options = (
+        {
+            property    = debug;
+            type        = integer;
+            advanced    = true;
+            default     = 0;
+            name        = "Debug Level";
+            description =
+  "Set to a non-zero value for the script to produce debugging output (the
+  larger the number, the greater the detail, up to about 5).  Debugging output
+  on each grading script run will be e-mailed to the instructor.";
+        }
+    );
+}

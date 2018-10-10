@@ -1,0 +1,77 @@
+{
+    "WebObjects Release" = "WebObjects 5.1";
+    encoding = "UTF-8";
+    variables = {
+        batchJobDisplayGroup = {
+            class = ERXDisplayGroup;
+            dataSource = {
+                class = EODatabaseDataSource;
+                editingContext = localContext;
+                fetchSpecification = {
+                    class = EOFetchSpecification;
+                    entityName = BatchJob;
+                    isDeep = YES;
+                    prefetchingRelationshipKeyPaths = ();
+                    qualifier = {
+                        class = EOKeyValueQualifier;
+                        key = isCancelled;
+                        selectorName = "isEqualTo:";
+                        value = {class = NSNumber; value = 0; };
+                    };
+                };
+            };
+            fetchesOnLoad = NO;
+            formatForLikeQualifier = "%@*";
+            numberOfObjectsPerBatch = 15;
+            selectsFirstObjectAfterFetch = YES;
+            sortOrdering = (
+                {
+                    class = EOSortOrdering;
+                    key = enqueueTime;
+                    selectorName = "compareAscending:";
+                }
+            );
+        };
+        batchResultDisplayGroup = {
+            class = ERXDisplayGroup;
+            dataSource = {
+                class = EODatabaseDataSource;
+                editingContext = localContext;
+                fetchSpecification = {
+                    class = EOFetchSpecification;
+                    entityName = BatchResult;
+                    fetchLimit = 0;
+                    isDeep = YES;
+                    qualifier = {
+                        class = EOAndQualifier;
+                        qualifiers = (
+                            {
+                                class = EOKeyValueQualifier;
+                                key = user;
+                                selectorName = "isEqualTo:";
+                                value = {"_key" = user; class = EOQualifierVariable; };
+                            },
+                            {
+                                class = EOKeyValueQualifier;
+                                key = isComplete;
+                                selectorName = "isEqualTo:";
+                                value = {class = NSNumber; value = 1; };
+                            }
+                        );
+                    };
+                };
+            };
+            fetchesOnLoad = NO;
+            formatForLikeQualifier = "%@*";
+            numberOfObjectsPerBatch = 15;
+            selectsFirstObjectAfterFetch = YES;
+            sortOrdering = (
+                {
+                    class = EOSortOrdering;
+                    key = completedTime;
+                    selectorName = "compareDescending:";
+                }
+            );
+        };
+    };
+}

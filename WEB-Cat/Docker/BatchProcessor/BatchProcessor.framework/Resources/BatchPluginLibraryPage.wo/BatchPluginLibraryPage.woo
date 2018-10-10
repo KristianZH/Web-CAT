@@ -1,0 +1,110 @@
+{
+    "WebObjects Release" = "WebObjects 5.2";
+    encoding = "UTF-8";
+    variables = {
+        personalPluginsGroup = {
+            class = WODisplayGroup;
+            dataSource = {
+                class = EODatabaseDataSource;
+                editingContext = localContext;
+                fetchSpecification = {
+                    class = EOFetchSpecification;
+                    entityName = BatchPlugin;
+                    fetchLimit = 0;
+                    isDeep = YES;
+                    qualifier = {
+                        class = EOAndQualifier;
+                        qualifiers = (
+                            {
+                                class = EOKeyValueQualifier;
+                                key = isPublished;
+                                selectorName = "isNotEqualTo:";
+                                value = {class = "java.lang.Number"; value = 1; };
+                            },
+                            {
+                                class = EOKeyValueQualifier;
+                                key = author;
+                                selectorName = "isEqualTo:";
+                                value = {"_key" = author; class = EOQualifierVariable; };
+                            }
+                        );
+                    };
+                };
+            };
+            fetchesOnLoad = NO;
+            formatForLikeQualifier = "%@*";
+            localKeys = ();
+            numberOfObjectsPerBatch = 0;
+            selectsFirstObjectAfterFetch = YES;
+            sortOrdering = (
+                {
+                    class = EOSortOrdering;
+                    key = name;
+                    selectorName = "compareCaseInsensitiveAscending:";
+                }
+            );
+        };
+        publishedPluginsGroup = {
+            class = WODisplayGroup;
+            dataSource = {
+                class = EODatabaseDataSource;
+                editingContext = localContext;
+                fetchSpecification = {
+                    class = EOFetchSpecification;
+                    entityName = BatchPlugin;
+                    fetchLimit = 0;
+                    isDeep = YES;
+                    qualifier = {
+                        class = EOKeyValueQualifier;
+                        key = isPublished;
+                        selectorName = "isEqualTo:";
+                        value = {class = "java.lang.Number"; value = 1; };
+                    };
+                };
+            };
+            fetchesOnLoad = NO;
+            formatForLikeQualifier = "%@*";
+            localKeys = ();
+            numberOfObjectsPerBatch = 0;
+            selectsFirstObjectAfterFetch = YES;
+            sortOrdering = (
+                {
+                    class = EOSortOrdering;
+                    key = name;
+                    selectorName = "compareCaseInsensitiveAscending:";
+                }
+            );
+        };
+        unpublishedPluginsGroup = {
+            class = WODisplayGroup;
+            dataSource = {
+                class = EODatabaseDataSource;
+                editingContext = localContext;
+                fetchSpecification = {
+                    class = EOFetchSpecification;
+                    entityName = BatchPlugin;
+                    fetchLimit = 0;
+                    isDeep = YES;
+                    qualifier = {
+                        class = EOKeyValueQualifier;
+                        key = isPublished;
+                        selectorName = "isNotEqualTo:";
+                        value = {class = "java.lang.Number"; value = 1; };
+                    };
+                };
+            };
+            fetchesOnLoad = NO;
+            formatForLikeQualifier = "%@*";
+            localKeys = ();
+            numberOfObjectsPerBatch = 0;
+            selectsFirstObjectAfterFetch = YES;
+            sortOrdering = (
+                {
+                    class = EOSortOrdering;
+                    key = name;
+                    selectorName = "compareCaseInsensitiveAscending:";
+                }
+            );
+        };
+    };
+}

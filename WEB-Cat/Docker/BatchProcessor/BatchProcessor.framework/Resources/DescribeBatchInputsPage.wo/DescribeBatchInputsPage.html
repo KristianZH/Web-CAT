@@ -1,0 +1,16 @@
+<wo:WCPageWithNavigation><wo:WCForm multipleSubmit="true">
+
+<wo:WCPageModule title="Choose the Objects in the Batch">
+<wo name="QueryBuilder"/>
+</wo>
+
+<wo:WCPageModule title="Batch Job Options">
+<p>For a new job running the plug-in: <span class="hl"><wo:str value="$batchPlugin.name"/></span></p>
+<wo name="BatchOptionEditor"/>
+</wo:WCPageModule>
+
+<div class="module right">
+<wo:WCButton label="Run Action" action="$runBatchJob"/>
+</div>
+
+</wo:WCForm></wo:WCPageWithNavigation>

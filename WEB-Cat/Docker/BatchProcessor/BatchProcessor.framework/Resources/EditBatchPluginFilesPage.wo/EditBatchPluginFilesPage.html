@@ -1,0 +1,33 @@
+<webobject name="Page">
+<wo:WCForm multipleSubmit="true" enctype="multipart/form-data" id="fileForm">
+
+<wo name="Section">
+<wo:if condition="$isEditable"><p>
+Any file modifications made on this page will cause all pending changes
+to be applied.  All file actions will take effect immediately.</p></wo:if>
+
+<wo name="FileBrowser"/>
+
+<wo:if condition="$isEditable">
+<wo:WCContentPane id="folderControls">
+<h2>Create a New Subfolder</h2>
+<p>In: <wo name="FolderList1"/>
+new folder name: <wo name="FolderName"/>
+<wo name="CreateFolder"/></p>
+
+<h2>Upload a New File</h2>
+<p>In: <wo name="FolderList2"/>
+upload: <span style="display:inline-block;width:25em;padding-bottom:-0.2em;vertical-align:middle;"><wo name="UploadFile"/></span>
+<wo name="Upload"/><br />
+(<wo name="Unzip"/> unzip/expand archive in target folder)
+</p>
+</wo:WCContentPane>
+</wo:if>
+
+</wo>
+
+<div class="module right">
+<wo:WCButton action="$next" label="Done"/>
+</div>
+
+</wo:WCForm></webobject>

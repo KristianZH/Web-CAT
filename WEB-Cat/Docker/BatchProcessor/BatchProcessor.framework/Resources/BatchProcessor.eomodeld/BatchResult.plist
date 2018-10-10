@@ -1,0 +1,81 @@
+{
+    attributes = (
+        {columnName = batchPluginId; name = batchPluginId; prototypeName = foreignId; }, 
+        {columnName = completedTime; name = completedTime; prototypeName = dateTime; }, 
+        {columnName = description; name = description; prototypeName = mediumText; }, 
+        {allowsNull = N; name = id; prototypeName = id; }, 
+        {
+            allowsNull = N; 
+            columnName = isComplete; 
+            name = isComplete; 
+            prototypeName = boolean; 
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
+        }, 
+        {columnName = objectQueryId; name = objectQueryId; prototypeName = foreignId; }, 
+        {allowsNull = Y; columnName = userId; name = userId; prototypeName = id; }
+    ); 
+    attributesUsedForLocking = (batchPluginId, description, id, isComplete, objectQueryId, userId); 
+    className = "org.webcat.batchprocessor.BatchResult"; 
+    classProperties = (
+        batchJobs, 
+        batchPlugin, 
+        completedTime, 
+        description, 
+        feedbackSections, 
+        isComplete, 
+        objectQuery, 
+        savedProperties, 
+        user
+    ); 
+    externalName = BatchResult; 
+    fetchSpecificationDictionary = {}; 
+    name = BatchResult; 
+    primaryKeyAttributes = (id); 
+    relationships = (
+        {
+            destination = BatchJob; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = batchResultId; sourceAttribute = id; }); 
+            name = batchJobs; 
+        }, 
+        {
+            destination = BatchPlugin; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = batchPluginId; }); 
+            name = batchPlugin; 
+        }, 
+        {
+            deleteRule = EODeleteRuleCascade; 
+            destination = BatchFeedbackSection; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = batchResultId; sourceAttribute = id; }); 
+            name = feedbackSections; 
+        }, 
+        {
+            destination = ObjectQuery; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = objectQueryId; }); 
+            name = objectQuery; 
+        }, 
+        {
+            destination = User; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = userId; }); 
+            name = user; 
+        }, 
+        {
+            deleteRule = EODeleteRuleCascade; 
+            destination = BatchResultProperty; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = batchResultId; sourceAttribute = id; }); 
+            name = savedProperties; 
+            ownsDestination = Y; 
+        }
+    ); 
+}

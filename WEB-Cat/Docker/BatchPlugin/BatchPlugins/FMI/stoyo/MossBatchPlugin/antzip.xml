@@ -1,0 +1,9 @@
+<project name="antzip" default="unzip">
+
+  <target name="unzip">
+    <unzip
+      src="${zip.src}"
+      dest="${zip.dest}"/>
+  </target>
+
+</project>

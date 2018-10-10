@@ -1,0 +1,13 @@
+BatchOptionEditor: org.webcat.core.OptionSetEditor {
+    options           = batchPlugin.configDescription.options;
+    optionValues      = configSettings;
+    categories        = batchPlugin.configDescription.optionCategories;
+    verboseOptionsKey = "EditBatchPluginPageNoVerboseOptions";
+    browsePageName    = "EditBatchPluginFilesPage";
+    base              = baseDir;
+}
+
+QueryBuilder : org.webcat.core.objectquery.ObjectQueryBuilder {
+    objectType = batchPlugin.batchEntity;
+    surrogate = objectQuerySurrogate;
+}

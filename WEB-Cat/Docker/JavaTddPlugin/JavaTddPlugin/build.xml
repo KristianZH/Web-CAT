@@ -1,0 +1,733 @@
+<project name="web-cat" default="run">
+
+  <!-- ============================================================
+       Property Definitions
+       ============================================================ -->
+
+  <property environment="env"/>
+
+  <property name="assignmentClassDir"   value="${pluginHome}/empty"/>
+  <property name="assignmentClassFiles" value="${pluginHome}/empty"/>
+  <property name="checkstyleConfigFile"
+            value="${pluginHome}/checkstyle.xml"/>
+  <property name="jacoco.db"            value="${resultDir}/jacoco.db"/>
+  <property name="defaultJars"          value="${pluginHome}/defaultJars"/>
+  <property name="zoltarJars"           value="${pluginHome}/gzoltar"/>
+  <property name="enableAssertions"     value="-ea"/>
+  <property name="enscriptStyle"        value="msvc"/>
+  <property name="instr.results.dir"    value="${resultDir}/instr.results"/>
+  <property name="instructorBuild"      value="${resultDir}/instructorbin"/>
+  <property name="instructorClassDir"   value="${pluginHome}/empty"/>
+  <property name="instructorClassFiles" value="${pluginHome}/empty"/>
+  <property name="javaPolicyFile"       value="${pluginHome}/java.policy"/>
+  <property name="javaSourceVersion"    value="1.5"/>
+  <property name="PDF.dest"             value="${resultDir}/${userName}.pdf"/>
+  <property name="pmdConfigFile"        value="${pluginHome}/pmd.xml"/>
+  <property name="psfile"               value="${resultDir}/${userName}.ps"/>
+  <property name="security.manager"     value="java.security.manager"/>
+  <property name="studentBuild"         value="${resultDir}/studentbin"/>
+  <property name="student.results.dir"  value="${resultDir}/student.results"/>
+  <property name="publicDir"            value="${resultDir}/public"/>
+  <property name="diagrams.dir"         value="${publicDir}/diagrams"/>
+
+  <!-- These are for reference tests -->
+  <property name="testCasePath"                 value="${pluginHome}/tests"/>
+  <property name="testCasePattern"              value="**/*.java"/>
+  <property name="visibleTestCasePath"          value="${pluginHome}/tests"/>
+  <property name="visibleTestCasePattern"       value="**/*.java"/>
+  <property name="refTestClassPattern"          value="**/*.class"/>
+  <property name="refTestClassExclusionPattern" value="none"/>
+
+  <!-- These are for student-written tests -->
+  <property name="studentTestClassPattern"
+            value="**/*test.class **/*tests.class"/>
+  <property name="studentTestClassExclusionPattern"
+            value="**/abstract*.class"/>
+
+  <!-- These are for static analysis filtering -->
+  <property name="staticAnalysisSrcPattern"          value="**/*.java"/>
+  <property name="staticAnalysisSrcExclusionPattern" value="none"/>
+  <property name="instrumentExclusionPattern"        value="none"/>
+
+  <condition property="isDebugging">
+    <matches string="${debug}" pattern="[3-9]"/>
+  </condition>
+
+  <condition property="generateDiagrams">
+    <and>
+      <istrue value="${wantClassDiagrams}"/>
+      <isset property="doxygenDir"/>
+      <isset property="dotDir"/>
+    </and>
+  </condition>
+
+  <condition property="run.sequential">
+  	<not>
+        <isset property="run.parallel"/>
+  	</not>
+  </condition>
+
+  <path id="instructor.classpath">
+    <pathelement location="${pluginHome}/JavaTddPluginSupport.jar"/>
+    <fileset dir="${pluginHome}">
+      <include name="*.jar"/>
+      <exclude name="JavaTddPluginSupport.jar"/>
+    </fileset>
+    <pathelement location="${instructorBuild}"/>
+    <pathelement location="${assignmentClassFiles}"/>
+    <fileset dir="${assignmentClassDir}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <pathelement location="${instructorClassFiles}"/>
+    <fileset dir="${instructorClassDir}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${defaultJars}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${pluginHome}/jacoco" includes="jacocoagent.jar"/>
+    <pathelement location="${studentBuild}.raw"/>
+    <pathelement location="${basedir}"/>
+  </path>
+
+  <path id="student.classpath.base">
+    <pathelement location="${pluginHome}/JavaTddPluginSupport.jar"/>
+    <fileset dir="${pluginHome}">
+      <include name="*.jar"/>
+      <exclude name="JavaTddPluginSupport.jar"/>
+    </fileset>
+    <pathelement location="${assignmentClassFiles}"/>
+    <fileset dir="${assignmentClassDir}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <pathelement location="${instructorClassFiles}"/>
+    <fileset dir="${instructorClassDir}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${defaultJars}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${pluginHome}/jacoco" includes="jacocoagent.jar"/>
+    <pathelement location="${basedir}"/>
+  </path>
+
+  <path id="student.classpath">
+    <path refid="student.classpath.base"/>
+    <pathelement location="${studentBuild}.raw"/>
+  </path>
+
+  <path id="zoltar.classpath">
+    <path refid="student.classpath"/>
+    <fileset dir="${zoltarJars}">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+
+  <path id="checkstyle.classpath">
+    <pathelement location="${checkstyle.jar}"/>
+    <path refid="student.classpath"/>
+  </path>
+
+  <path id="student.instrumented.classpath">
+    <path refid="student.classpath.base"/>
+    <pathelement location="${studentBuild}"/>
+    <pathelement location="${studentBuild}.raw"/>
+  </path>
+
+  <path id="pmd.classpath">
+    <pathelement location="${pluginHome}"/>
+    <fileset dir="${pmd.lib}" casesensitive="false">
+      <include name="**/*.jar"/>
+    </fileset>
+    <pathelement location="${basedir}"/>
+  </path>
+
+
+  <!-- ============================================================
+       Individual targets
+       ============================================================ -->
+
+  <target name="debug.output" if="isDebugging">
+    <condition property="printable.path" value="${env.Path}" else="${env.PATH}">
+         <isset property="env.Path"/>
+    </condition>
+    <echo>
+basedir              = ${basedir}
+ANT_HOME             = ${env.ANT_HOME}
+JAVA_HOME            = ${env.JAVA_HOME}
+PATH                 = ${printable.path}
+timeout              = ${exec.timeout} (for each of two test runs)
+assignmentClassFiles = ${assignmentClassFiles}
+assignmentClassDir   = ${assignmentClassDir}
+instructorClassFiles = ${instructorClassFiles}
+instructorClassDir   = ${instructorClassDir}
+testCasePath                      = ${testCasePath}
+testCasePattern                   = ${testCasePattern}
+refTestClassPattern               = ${refTestClassPattern}
+refTestClassExclusionPattern      = ${refTestClassExclusionPattern}
+studentTestClassPattern           = ${studentTestClassPattern}
+studentTestClassExclusionPattern  = ${studentTestClassExclusionPattern}
+staticAnalysisSrcPattern          = ${staticAnalysisSrcPattern}
+staticAnalysisSrcExclusionPattern = ${staticAnalysisSrcExclusionPattern}
+    </echo>
+  </target>
+
+
+  <target name="initial.clean"
+          depends="debug.output"
+          description="removes compiled classes">
+    <delete includeEmptyDirs="true">
+      <fileset dir="${resultDir}" casesensitive="false">
+        <include name="studentbin/"/>
+        <include name="studentbin.raw/"/>
+        <include name="instructorbin/"/>
+        <include name="jacoco*"/>
+        <include name="pmd*"/>
+        <include name="checkstyle*"/>
+      </fileset>
+    </delete>
+    <delete>
+      <fileset dir="${basedir}" casesensitive="false">
+        <include name="**/*.class"/>
+      </fileset>
+    </delete>
+  </target>
+
+
+  <target name="compile"
+          description="compiles all the student code using javac">
+    <mkdir dir="${studentBuild}.raw"/>
+    <apply executable="${PerlForPlugins.perl.exe}"
+      failonerror="true"
+      parallel="true"
+      skipemptyfilesets="true"
+      forwardslash="true"
+      >
+      <arg value="${pluginHome}/ensureUTF8.pl"/>
+      <fileset dir="${basedir}" casesensitive="no">
+        <include name="**/*.java"/>
+      </fileset>
+    </apply>
+    <javac srcdir="${basedir}"
+           destdir="${studentBuild}.raw"
+           verbose="off"
+           deprecation="on"
+           debug="true"
+           debuglevel="lines,vars,source"
+    	   includeAntRuntime="false"
+    	   encoding="UTF-8"
+      >
+      <classpath refid="student.classpath"/>
+      <compilerarg value="-Xlint:unchecked"/>
+    </javac>
+  </target>
+
+
+  <target name="compile.instructor.tests"
+          description="compile all of the instructor-provided unit tests">
+    <mkdir dir="${instructorBuild}"/>
+  	<!-- TODO: need to handle non-UTF-8 reference tests here -->
+    <javac destdir="${instructorBuild}"
+           verbose="off"
+           failonerror="false"
+           debug="true"
+           debuglevel="lines,vars,source"
+           casesensitive="no"
+           includeAntRuntime="false"
+    	>
+    	<!-- Should include:, but not until we have a viable UTF-8-ifier
+           encoding="UTF-8"
+    	-->
+      <classpath refid="instructor.classpath"/>
+      <src path="${testCasePath}"/>
+      <include name="${testCasePattern}"/>
+      <!--
+      <src path="${visibleTestCasePath}"/>
+      <include name="${visibleTestCasePattern}"/>
+      -->
+    </javac>
+  </target>
+
+
+  <target name="instructor.test"
+            depends="compile.instructor.tests"
+        description="runs all instructor-provided tests">
+    <mkdir dir="${instr.results.dir}"/>
+    <junit printsummary="off"
+           haltonerror="no"
+           haltonfailure="no"
+           filtertrace="no"
+           fork="yes"
+           forkmode="once"
+           timeout="${exec.timeout}">
+      <classpath refid="instructor.classpath"/>
+      <jvmarg value="${enableAssertions}"/>
+      <jvmarg value="-D${security.manager}"/>
+      <!--jvmarg value="-Dabbot.robot.verify=false"/-->
+      <jvmarg value="-Dabbot.robot.mode=awt"/>
+      <!--jvmarg value="-Dabbot.robot.event_post_delay=200"/>
+      <jvmarg value="-Dabbot.robot.auto_delay=100"/>
+      <jvmarg value="-Dstudent.TestCase.trimStackTraces=false"/-->
+      <jvmarg value="-Djava.security.policy==file:${javaPolicyFile}"/>
+      <jvmarg value="-DProfilingSecurityManager.output=${resultDir}/instr-permissions.txt"/>
+      <jvmarg value="-Dant.home=${ant.home}"/>
+      <jvmarg value="-DresultDir=${resultDir}"/>
+      <jvmarg value="-DscriptHome=${scriptHome}"/>
+      <jvmarg value="-DpluginHome=${pluginHome}"/>
+      <jvmarg value="-DworkingDir=${workingDir}"/>
+      <jvmarg value="-DassignmentClassDir=${assignmentClassDir}"/>
+      <jvmarg value="-DinstructorClassDir=${instructorClassDir}"/>
+      <jvmarg value="-Dstudent.TestCase.trimStackTraces=false"/>
+      <jvmarg value="-Xms128m"/>
+      <jvmarg value="-Xmx512m"/>
+      <jvmarg value="-XX:ErrorFile=${resultDir}/instr-jvm-error.log"/>
+      <jvmarg value="-Dstudent.testingsupport.junit4.AdaptiveTimeout.ceiling=${student.testingsupport.junit4.AdaptiveTimeout.ceiling}"/>
+      <jvmarg value="-Dstudent.testingsupport.junit4.AdaptiveTimeout.maximum=${student.testingsupport.junit4.AdaptiveTimeout.maximum}"/>
+      <jvmarg value="-Dstudent.testingsupport.junit4.AdaptiveTimeout.minimum=${student.testingsupport.junit4.AdaptiveTimeout.minimum}"/>
+      <jvmarg value="-Dstudent.testingsupport.junit4.AdaptiveTimeout.threshold=${student.testingsupport.junit4.AdaptiveTimeout.threshold}"/>
+      <jvmarg value="-Dstudent.testingsupport.junit4.AdaptiveTimeout.rampup=${student.testingsupport.junit4.AdaptiveTimeout.rampup}"/>
+      <jvmarg value="-Dstudent.testingsupport.junit4.AdaptiveTimeout.rampdown=${student.testingsupport.junit4.AdaptiveTimeout.rampdown}"/>
+      <jvmarg value="-Dstudent.testingsupport.junit4.AdaptiveTimeout.logfile=${resultDir}/instr-timeout.csv"/>
+      <jvmarg value="-Dstudent.testingsupport.junit4.AdaptiveTimeout.user=${userInstitution},${semester},${course},${CRN},${assignment},${userName},${submissionNo}"/>
+      <formatter
+        classname="net.sf.webcat.plugins.javatddplugin.HintingJUnitResultFormatter"
+        extension=".inc"/>
+      <formatter
+        classname="net.sf.webcat.plugins.javatddplugin.BasicJUnitResultFormatter"
+        extension="-results.txt"/>
+      <formatter
+        classname="net.sf.webcat.plugins.javatddplugin.OutputCaptureJUnitResultFormatter"
+        extension="-out.txt"/>
+      <batchtest todir="${instr.results.dir}">
+        <fileset dir="${instructorBuild}"
+                 casesensitive="false"
+                 includes="${refTestClassPattern}"
+                 excludes="${refTestClassExclusionPattern}"/>
+      </batchtest>
+    </junit>
+    <concat destfile="${resultDir}/instr.inc">
+      <fileset dir="${instr.results.dir}"
+               includes="*.inc"
+               casesensitive="false"/>
+    </concat>
+    <concat destfile="${resultDir}/instr-results.txt">
+      <fileset dir="${instr.results.dir}"
+               includes="*-results.txt"
+               casesensitive="false"/>
+    </concat>
+    <concat destfile="${resultDir}/instr-out.txt">
+      <fileset dir="${instr.results.dir}"
+               includes="*-out.txt"
+               casesensitive="false"/>
+    </concat>
+    <delete dir="${instr.results.dir}"/>
+  </target>
+
+
+  <target name="test"
+    	  depends="instrument.code"
+          description="runs all student tests">
+    <mkdir dir="${student.results.dir}"/>
+    <junit printsummary="off"
+           haltonerror="no"
+           haltonfailure="no"
+           fork="yes"
+           forkmode="once"
+           timeout="${exec.timeout}">
+      <classpath refid="student.instrumented.classpath"/>
+      <jvmarg value="${enableAssertions}"/>
+      <jvmarg value="-D${security.manager}"/>
+        <!--jvmarg value="-Dabbot.robot.verify=false"/-->
+        <jvmarg value="-Dabbot.robot.mode=awt"/>
+        <!--jvmarg value="-Dabbot.robot.event_post_delay=200"/>
+        <jvmarg value="-Dabbot.robot.auto_delay=100"/-->
+      <jvmarg value="-Djava.security.policy==file:${javaPolicyFile}"/>
+      <jvmarg value="-DProfilingSecurityManager.output=${resultDir}/student-permissions.txt"/>
+      <jvmarg value="-Dant.home=${ant.home}"/>
+      <jvmarg value="-DresultDir=${resultDir}"/>
+      <jvmarg value="-DscriptHome=${scriptHome}"/>
+      <jvmarg value="-DpluginHome=${pluginHome}"/>
+      <jvmarg value="-DworkingDir=${workingDir}"/>
+      <jvmarg value="-DassignmentClassDir=${assignmentClassDir}"/>
+      <jvmarg value="-DinstructorClassDir=${instructorClassDir}"/>
+      <jvmarg value="-Dstudent.testingsupport.junit4.AdaptiveTimeout.ceiling=${student.testingsupport.junit4.AdaptiveTimeout.ceiling}"/>
+      <jvmarg value="-Dstudent.testingsupport.junit4.AdaptiveTimeout.maximum=${student.testingsupport.junit4.AdaptiveTimeout.maximum}"/>
+      <jvmarg value="-Dstudent.testingsupport.junit4.AdaptiveTimeout.minimum=${student.testingsupport.junit4.AdaptiveTimeout.minimum}"/>
+      <jvmarg value="-Dstudent.testingsupport.junit4.AdaptiveTimeout.threshold=${student.testingsupport.junit4.AdaptiveTimeout.threshold}"/>
+      <jvmarg value="-Dstudent.testingsupport.junit4.AdaptiveTimeout.rampup=${student.testingsupport.junit4.AdaptiveTimeout.rampup}"/>
+      <jvmarg value="-Dstudent.testingsupport.junit4.AdaptiveTimeout.rampdown=${student.testingsupport.junit4.AdaptiveTimeout.rampdown}"/>
+      <jvmarg value="-Dstudent.testingsupport.junit4.AdaptiveTimeout.logfile=${resultDir}/student-timeout.csv"/>
+      <jvmarg value="-Dstudent.testingsupport.junit4.AdaptiveTimeout.user=${userInstitution},${semester},${course},${CRN},${assignment},${userName},${submissionNo}"/>
+      <jvmarg value="-Xms128m"/>
+      <jvmarg value="-Xmx512m"/>
+      <jvmarg value="-XX:ErrorFile=${resultDir}/student-jvm-error.log"/>
+      <sysproperty key="jacoco-agent.destfile" file="${jacoco.db}"/>
+      <formatter
+        classname="net.sf.webcat.plugins.javatddplugin.PlistJUnitResultFormatter"
+        extension=".inc"/>
+      <formatter
+        classname="net.sf.webcat.plugins.javatddplugin.BasicJUnitResultFormatter"
+        extension="-results.txt"/>
+      <formatter
+        classname="net.sf.webcat.plugins.javatddplugin.OutputCaptureJUnitResultFormatter"
+        extension="-out.txt"/>
+      <batchtest todir="${student.results.dir}">
+        <fileset dir="${studentBuild}"
+                 casesensitive="false"
+                 includes="${studentTestClassPattern}"
+                 excludes="${studentTestClassExclusionPattern}"/>
+      </batchtest>
+    </junit>
+    <concat destfile="${resultDir}/student.inc">
+      <fileset dir="${student.results.dir}"
+               includes="*.inc"
+               casesensitive="false"/>
+    </concat>
+    <concat destfile="${resultDir}/student-results.txt">
+      <fileset dir="${student.results.dir}"
+               includes="*-results.txt"
+               casesensitive="false"/>
+    </concat>
+    <concat destfile="${resultDir}/student-out.txt">
+      <fileset dir="${student.results.dir}"
+               includes="*-out.txt"
+               casesensitive="false"/>
+    </concat>
+    <delete dir="${student.results.dir}"/>
+    <condition property="no.coverage.data">
+      <not>
+        <available file="${jacoco.db}"/>
+      </not>
+    </condition>
+  </target>
+
+
+  <target name="instrument.code"
+          description="add JaCoCo instrumentation to student code">
+    <mkdir dir="${studentBuild}"/>
+    <copy todir="${studentBuild}">
+      <fileset dir="${studentBuild}.raw"
+        includes="${instrumentExclusionPattern}"/>
+  	</copy>
+    <taskdef resource="org/jacoco/ant/antlib.xml">
+      <classpath path="${pluginHome}/jacoco/jacocoant.jar"/>
+    </taskdef>
+    <instrument destdir="${studentBuild}">
+      <fileset dir="${studentBuild}.raw"
+        includes="**/*.class"
+        excludes="${instrumentExclusionPattern}"/>
+    </instrument>
+  </target>
+
+
+  <target name="jacoco.report"
+          depends="instrument.code, test"
+  	      unless="no.coverage.data"
+          description="generate JaCoCo coverage report">
+    <report>
+      <executiondata>
+        <file file="${jacoco.db}"/>
+      </executiondata>
+      <structure name="JaCoCo">
+        <classfiles>
+          <fileset dir="${studentBuild}.raw" excludes="${instrumentExclusionPattern}"/>
+        </classfiles>
+        <sourcefiles encoding="UTF-8">
+          <fileset dir="${basedir}"/>
+        </sourcefiles>
+      </structure>
+      <xml destfile="${resultDir}/jacoco.xml"/>
+    </report>
+  </target>
+
+
+  <target name="zoltar" if="generateHeatmaps">
+    <!--
+    <fileset
+      dir="${studentBuild}.raw"
+      casesensitive="false"
+      includes="${studentTestClassPattern}"
+      excludes="${studentTestClassExclusionPattern}"
+      id="student.test.files"/>
+    <pathconvert
+      pathsep=","
+      property="student.test.files.list"
+      refid="student.test.files"/>
+    -->
+
+    <java fork="true" classname="org.webcat.plugins.javatddplugin.ZoltarTest">
+      <assertions enablesystemassertions="true"/>
+      <classpath refid="zoltar.classpath"/>
+      <jvmarg value="-Xms128m"/>
+      <jvmarg value="-Xmx512m"/>
+
+      <sysproperty key="student.testingsupport.junit4.AdaptiveTimeout.ceiling"
+        value="${student.testingsupport.junit4.AdaptiveTimeout.ceiling}"/>
+      <sysproperty key="student.testingsupport.junit4.AdaptiveTimeout.maximum"
+        value="${student.testingsupport.junit4.AdaptiveTimeout.maximum}"/>
+      <sysproperty key="student.testingsupport.junit4.AdaptiveTimeout.minimum"
+        value="${student.testingsupport.junit4.AdaptiveTimeout.minimum}"/>
+      <sysproperty key="student.testingsupport.junit4.AdaptiveTimeout.threshold"
+        value="${student.testingsupport.junit4.AdaptiveTimeout.threshold}"/>
+      <sysproperty key="student.testingsupport.junit4.AdaptiveTimeout.rampup"
+        value="${student.testingsupport.junit4.AdaptiveTimeout.rampup}"/>
+      <sysproperty key="student.testingsupport.junit4.AdaptiveTimeout.rampdown"
+        value="${student.testingsupport.junit4.AdaptiveTimeout.rampdown}"/>
+
+      <sysproperty key="gzoltar.xml.output" value="${resultDir}/gzoltar.xml"/>
+      <sysproperty key="gzoltar.csv.output" value="${resultDir}/gzoltar.csv"/>
+      <sysproperty key="gzoltar.student.pid"
+        value="${userInstitution},${semester},${course},${CRN},${assignment},${userName},${submissionNo}"/>
+      <sysproperty key="gzoltar.student.bin" value="${studentBuild}.raw"/>
+      <sysproperty key="gzoltar.tests.dir" value="${instructorBuild}"/>
+      <sysproperty key="gzoltar.libs" value="${toString:student.classpath}"/>
+    </java>
+
+    <java classname="org.webcat.plugins.javatddplugin.ZoltarHeatmap">
+      <assertions enablesystemassertions="true"/>
+      <classpath refid="zoltar.classpath"/>
+      <sysproperty key="gzoltar.xml.input" value="${resultDir}/gzoltar.xml"/>
+      <sysproperty key="gzoltar.html.output" value="${resultDir}/gzoltar.html"/>
+      <sysproperty key="gzoltar.source.dir" value="${basedir}"/>
+    </java>
+  </target>
+
+
+  <target name="checkstyle"
+  	unless="disableCheckstyle">
+    <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties"
+         classpathref="checkstyle.classpath"/>
+    <checkstyle config="${checkstyleConfigFile}"
+                failOnViolation="false">
+      <classpath refid="checkstyle.classpath"/>
+      <formatter type="xml" toFile="${resultDir}/checkstyle_report.xml"/>
+      <fileset dir="${basedir}"
+               casesensitive="false"
+               includes="${staticAnalysisSrcPattern}"
+               excludes="${staticAnalysisSrcExclusionPattern}"/>
+    </checkstyle>
+    <!-- style in="checkstyle_report.xml"
+           out="checkstyle_report.xml"
+           style="checkstyle.xsl"/ -->
+  </target>
+
+
+  <target name="pmd"
+  	unless="disablePmd">
+    <taskdef name="pmd"
+             classname="net.sourceforge.pmd.ant.PMDTask"
+             classpathref="pmd.classpath"/>
+    <pmd rulesetfiles="${pmdConfigFile}"
+         failonerror="false"
+         failOnRuleViolation="false"
+    >
+      <sourceLanguage name="java" version="1.7"/>
+      <auxclasspath refid="student.classpath"/>
+      <formatter type="xml" toFile="${resultDir}/pmd_report.xml"/>
+      <fileset dir="${basedir}"
+               casesensitive="false"
+               includes="${staticAnalysisSrcPattern}"
+               excludes="${staticAnalysisSrcExclusionPattern}"/>
+    </pmd>
+  </target>
+
+
+  <taskdef name="httpmpost"
+    classname="net.sf.fikin.ant.httpclientanttask.AntMultipartPostMethod">
+    <classpath>
+      <fileset dir="${pluginHome}/fikin" casesensitive="false">
+        <include name="*.jar"/>
+      </fileset>
+      <pathelement location="${pluginHome}/defaultJars/commons-codec-1.6.jar"/>
+    </classpath>
+  </taskdef>
+
+
+  <macrodef name="comtor">
+    <attribute name="apiKey" description="The COMTOR web service API key"/>
+    <attribute name="destfile" description="The file to write the output to"/>
+    <attribute name="responseFormat"
+      default="html"
+      description="The format of output for COMTOR to generate"/>
+    <attribute name="userId" default=""
+      description="A unique identifier for the author of these files"/>
+    <attribute name="institution" default=""
+      description="A unique identifier for home institution of the author of the files"/>
+    <attribute name="violationsOnly" default="true"
+      description="Should the COMTOR report show violations only, or also successful checks"/>
+    <element name="files" implicit="true"/>
+    <sequential>
+      <jar destfile="${resultDir}/comtorupload.jar">
+        <files/>
+      </jar>
+      <httpmpost url="http://dev.comtor.org:8080/apiServ/submit"
+        logFile="@{destfile}"
+        logLevel="content"
+        shutdown="true"
+        failOnError="false"
+        retryAttempts="2"
+        >
+        <postString name="apikey" value="@{apiKey}"/>
+        <postString name="response_type" value="http"/>
+        <postString name="response_format" value="@{responseFormat}"/>
+        <postString name="interface_client" value="webcat"/>
+        <postString name="webcat_uuid" value="@{userId}"/>
+        <postString name="webcat_institution" value="@{institution}"/>
+        <postString name="violations_only" value="@{violationsOnly}"/>
+        <postFile name="jarfile" file="${resultDir}/comtorupload.jar"
+          contentType="application/java-archive"/>
+      </httpmpost>
+      <delete file="${resultDir}/comtorupload.jar" failonerror="false"/>
+    </sequential>
+  </macrodef>
+
+
+  <target name="run.comtor" if="use.comtor">
+    <comtor
+      apiKey="378eca93ed0e950bc93b4cd04ced32159fd995a08253dd0088e53030f141b881"
+      destfile="${resultDir}/comtor.html"
+      userId="${userName}"
+      institution="${userInstitution}">
+      <fileset dir="src" erroronmissingdir="false" includes="**/*.java"/>
+      <fileset dir="." includes="**/*.java" excludes="src/"/>
+    </comtor>
+  </target>
+
+
+  <target name="remote.post" if="remote.post.url">
+    <pathconvert property="post.file.list" pathsep="${line.separator}">
+      <fileset dir="${resultDir}/.." includes="*.*"/>
+    </pathconvert>
+    <loadresource property="post.file.name">
+      <string value="${post.file.list}"/>
+      <filterchain><headfilter lines="1"/></filterchain>
+    </loadresource>
+    <echo message="post file: ${post.file.name}"/>
+    <httpmpost url="${remote.post.url}"
+      logFile="${resultDir}/remote.post.html"
+      logLevel="content"
+      shutdown="true"
+      failOnError="false"
+      retryAttempts="2"
+      sslAcceptUntrusted="true"
+      >
+      <userCredentials username="admin0" password="0admin" domain="" host="courses.cs.vt.edu"/>
+      <postString name="user" value="${userName}"/>
+      <postFile name="uploadedfile" file="${post.file.name}"/>
+    </httpmpost>
+  </target>
+
+
+  <target name="generate.pdf"
+          description="generates a pdf printout of student's source code"
+          if="generatePDF">
+    <apply executable="enscript"
+           failonerror="false"
+           parallel="true"
+           skipemptyfilesets="true"
+           forwardslash="true">
+      <arg value="--fancy-header=enscript2"/>
+      <arg value="-C"/>
+      <arg value="--pretty-print"/>
+      <arg value="--style=${enscriptStyle}"/>
+      <arg value="--color"/>
+      <arg value="-H3"/>
+      <arg value="--mark-wrapped-lines=arrow"/>
+      <arg value="--continuous-page-numbers"/>
+      <arg value="--media=Letter"/>
+      <arg value="--header=user: ${userName}"/>
+      <arg value="-p${psfile}"/>
+      <fileset dir="." casesensitive="false">
+        <include name="**/*.java"/>
+      </fileset>
+    </apply>
+    <exec executable="bash" failonerror="false">
+      <arg value="ps2pdf"/>
+      <arg value="${psfile}"/>
+      <arg value="${PDF.dest}"/>
+    </exec>
+    <delete file="${psfile}"/>
+  </target>
+
+
+  <target name="generate.diagrams"
+          description="generates class diagrams from the student's source code"
+          if="generateDiagrams">
+
+    <!-- Fill in the doxygen configuration template with the correct paths -->
+    <copy file="${pluginHome}/doxygen.config.template"
+          tofile="${basedir}/doxygen.config">
+      <filterchain>
+        <replacetokens>
+          <token key="doxygenInputDir" value="${basedir}"/>
+          <token key="doxygenOutputDir" value="${basedir}/doxygen"/>
+          <token key="doxygenDotDir" value="${dotDir}"/>
+        </replacetokens>
+      </filterchain>
+    </copy>
+
+    <!-- Run the doxygen tool -->
+    <exec executable="${doxygenDir}/doxygen" failonerror="false">
+      <arg value="${basedir}/doxygen.config"/>
+    </exec>
+
+    <!-- Copy the generated class diagram images into the result dir -->
+    <mkdir dir="${diagrams.dir}"/>
+    <copy todir="${diagrams.dir}">
+      <fileset dir="${basedir}/doxygen/html" includes="inherit__graph__*.png"/>
+    </copy>
+
+    <!-- Delete the Doxygen generated files from the working dir so they
+         don't all get copied into the result dir -->
+    <delete dir="${basedir}/doxygen"/>
+  </target>
+
+
+  <target name="final.clean"
+          unless="doNotDelete"
+          description="removes unnecessary derived files">
+    <delete includeEmptyDirs="true" quiet="true">
+      <fileset dir="${resultDir}" casesensitive="false">
+        <include name="studentbin/"/>
+        <include name="studentbin.raw/"/>
+        <include name="instructorbin/"/>
+        <include name="jacoco.db"/>
+      </fileset>
+    </delete>
+  </target>
+
+
+  <!-- ============================================================
+       The main target
+       ============================================================ -->
+
+  <target name="test.bundle" depends="instructor.test, jacoco.report, zoltar"/>
+  <target name="checkstyle.bundle"
+    depends="checkstyle, run.comtor, remote.post, generate.pdf, generate.diagrams"/>
+
+  <target name="sequential.middle" depends="compile" if="run.sequential">
+  	<echo message="Running steps sequentially ..."/>
+    <antcall target="test.bundle"/>
+    <antcall target="checkstyle.bundle"/>
+    <antcall target="pmd"/>
+  </target>
+
+  <target name="parallel.middle" depends="compile" if="run.parallel">
+    <echo message="Running steps in parallel ..."/>
+    <parallel threadsPerProcessor="1">
+      <sequential>
+        <antcall target="test.bundle"/>
+      </sequential>
+      <sequential>
+        <antcall target="checkstyle.bundle"/>
+      </sequential>
+      <sequential>
+        <antcall target="pmd"/>
+      </sequential>
+    </parallel>
+  </target>
+
+  <target name="run" depends="initial.clean,
+  	sequential.middle, parallel.middle, final.clean"/>
+
+</project>

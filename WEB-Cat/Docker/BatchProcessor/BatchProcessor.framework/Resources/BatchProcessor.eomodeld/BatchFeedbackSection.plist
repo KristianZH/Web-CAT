@@ -1,0 +1,90 @@
+{
+    attributes = (
+        {columnName = batchResultId; name = batchResultId; prototypeName = foreignId; }, 
+        {columnName = fileName; name = fileName; prototypeName = tinyText; }, 
+        {allowsNull = N; name = id; prototypeName = id; }, 
+        {
+            allowsNull = N; 
+            columnName = isCollapsed; 
+            name = isCollapsed; 
+            prototypeName = boolean; 
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
+        }, 
+        {
+            columnName = isLinked; 
+            name = isLinked; 
+            prototypeName = boolean; 
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
+        }, 
+        {
+            columnName = location; 
+            name = location; 
+            prototypeName = tinyText; 
+            userInfo = {
+                enumDefault = DEFAULT; 
+                isEnum = true; 
+                type = "org.webcat.batchprocessor.BatchFeedbackLocation"; 
+            }; 
+        }, 
+        {columnName = mimeType; name = mimeType; prototypeName = tinyText; }, 
+        {
+            columnName = sortOrder; 
+            name = order; 
+            prototypeName = integer; 
+            userInfo = {
+                isScalar = true; 
+                scalarConversionMethodName = intValue; 
+                scalarDefault = 0; 
+                type = int; 
+                valueClassName = Integer; 
+            }; 
+        }, 
+        {
+            columnName = recipients; 
+            name = recipients; 
+            prototypeName = tinyText; 
+            userInfo = {
+                enumDefault = OWNER; 
+                isEnum = true; 
+                type = "org.webcat.batchprocessor.BatchFeedbackRecipient"; 
+            }; 
+        }, 
+        {columnName = title; name = title; prototypeName = tinyText; }
+    ); 
+    attributesUsedForLocking = (
+        batchResultId, 
+        fileName, 
+        isCollapsed, 
+        isLinked, 
+        location, 
+        mimeType, 
+        order, 
+        recipients, 
+        title
+    ); 
+    className = "org.webcat.batchprocessor.BatchFeedbackSection"; 
+    classProperties = (
+        batchResult, 
+        fileName, 
+        isCollapsed, 
+        isLinked, 
+        location, 
+        mimeType, 
+        order, 
+        recipients, 
+        title
+    ); 
+    externalName = BatchFeedbackSection; 
+    fetchSpecificationDictionary = {}; 
+    name = BatchFeedbackSection; 
+    primaryKeyAttributes = (id); 
+    relationships = (
+        {
+            destination = BatchResult; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = batchResultId; }); 
+            name = batchResult; 
+        }
+    ); 
+}

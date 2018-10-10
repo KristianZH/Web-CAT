@@ -1,0 +1,149 @@
+/* $Id: junit.css,v 1.1 2011/03/07 19:24:07 aallowat Exp $ */
+
+.junit-container * {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.junit-container a:hover {
+    text-decoration: none;
+    background-color: transparent;
+    border-bottom: 0;
+}
+
+.junit-suite-collapsed {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    display: inline-block;
+    background-image: url(junit-icons/tree-collapsed.png);
+}
+
+.junit-suite-expanded {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    display: inline-block;
+    background-image: url(junit-icons/tree-expanded.png);
+}
+
+.junit-stats {
+    float: left;
+    width: 48%;
+    padding: 4px;
+}
+
+.junit-stats > table {
+    width: 100%;
+}
+
+.junit-stats > table td {
+    width: 33%;
+}
+
+.junit-bar {
+    float: right;
+    width: 48%;
+    height: 1.3em;
+    border: 1px solid gray;
+}
+
+.junit-bar table {
+    width: 100%;
+    height: 100%;
+}
+
+.junit-bar table td {
+    font-size: 90%;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+}
+
+.junit-bar-fill {
+    height: 100%;
+}
+
+.junit-bar-fill-pass {
+    background-color: green;
+}
+
+.junit-bar-fill-failure {
+    background-color: darkBlue;
+}
+
+.junit-bar-fill-error {
+    background-color: #C53A3A;
+}
+
+.junit-tests {
+    position: relative;
+    float: left;
+    width: 48%;
+    height: 10em;
+    border: 1px solid gray;
+    overflow: auto;
+}
+
+.junit-tests ul, .junit-trace ul {
+    margin: 0;
+    padding: 1px;
+    list-style-type: none;
+}
+
+.junit-tests ul li, .junit-trace ul li {
+    padding-left: 0em;
+    list-style-type: none;
+    white-space: nowrap;
+}
+
+.junit-tests ul li a {
+    text-decoration: none;
+}
+
+.junit-tests ul li a:hover span.junit-title {
+    text-decoration: underline;
+}
+
+.junit-tests ul li li {
+    padding-left: 36px;
+    list-style-type: none;
+}
+
+.junit-tests ul li.junit-selected {
+    background-color: royalBlue;
+}
+
+.junit-tests ul li.junit-selected a,
+.junit-tests ul li.junit-selected .junit-duration {
+    color: white;
+    background-color: royalBlue;
+}
+
+.junit-tests li img, .junit-trace li img {
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+}
+
+.junit-tests li span, .junit-trace li span {
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+.junit-trace {
+    float: right;
+    width: 48%;
+    height: 10em;
+    border: 1px solid gray;
+    overflow: auto;
+}
+
+.junit-trace-reason {
+    font-weight: bold;
+}
+
+.junit-duration {
+    color: cornflowerBlue;
+}

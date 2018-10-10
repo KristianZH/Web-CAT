@@ -1,0 +1,144 @@
+<wo:WCPageWithNavigation title="Batch Actions and Results">
+
+<wo:org.webcat.core.WCPageModule title="Run a Batch Action">
+<wo:if condition="$pluginsDisplayGroup.allObjects.count">
+
+<wo:loop list="$pluginsDisplayGroup.displayedObjects" item="$batchPlugin">
+<wo:if condition="$canEditPlugin"><div class="floatRight">
+  <!--  webobject name="DownloadNow"/ -->
+  <webobject name="EditFiles"/>
+  <wo:if condition="$batchPlugin.published">
+    <webobject name="Unpublish"/>
+  </wo:if><wo:else>
+    <webobject name="Publish"/>
+  </wo:else>
+  <wo:if condition="$batchPlugin.configDescription.globalOptions.count">
+    <webobject name="EditGlobalOptions"/>
+  </wo:if>
+  <webobject name="ReloadConfig"/>
+</div></wo:if>
+<p style="margin-bottom:0">
+<wo:WCLink string="$batchPlugin.displayableName" action="$pluginChosen"/>
+(<wo:if condition="$batchPlugin.configDescription.displayableName"><wo:str value="$batchPlugin.name"/>,
+</wo:if>v.<wo:str value="$batchPlugin.descriptor.currentVersion"/><wo:not condition="$batchPlugin.published">,
+<span class="caution">private</span></wo:not>)
+</p>
+<p style="margin-left: 2em;">
+<wo:if condition="$batchPlugin.configDescription.description">
+<wo:str value="$batchPlugin.configDescription.description"/><br/>
+</wo:if>
+[last modified: <wo:str value="$batchPlugin.lastModified" formatter="$session.timeFormatter"/>,
+installer: <wo:str value="$batchPlugin.author.name"/>]
+</p>
+</wo:loop>
+
+</wo:if>
+<wo:else>
+    <p>There are currently no batch plug-ins available. You can upload one
+    in the section at the bottom of this page.</p>
+</wo:else>
+</wo:org.webcat.core.WCPageModule>
+
+<wo:WCForm multipleSubmit="true" enctype="multipart/form-data">
+
+<wo:if condition="$batchJobDisplayGroup.allObjects.count">
+<wo:WCPageModule title="Batch Actions in Process">
+    <p>The following batch jobs are either currently running or in the queue.</p>
+    <wo:WCTable displayGroup="$batchJobDisplayGroup">
+        <wo:WCTableHeadings>
+            <wo:WCTableHeading title="Job Description" sortOnKeyPaths="description"/>
+            <wo:WCTableHeading title="Requested At" sortOnKeyPaths="enqueueTime"/>
+            <wo:WCTableHeading title="Progress"/>
+        </wo:WCTableHeadings>
+        <wo:WCTableRows item="$batchJob">
+            <wo:WCTableRow>
+                <td>
+                    <wo:WCLink string="$batchJob.description" action="$viewBatchProgress"/>
+                    <wo:not condition="$batchJob.isReady">
+                       <span style="color: red">(suspended)</span>
+                    </wo:not>
+                </td>
+                <td><wo:str value="$batchJob.enqueueTime" formatter="$session.timeFormatter"/></td>
+                <td><wo:str value="$batchJob.progressPercentage"/>%</td>
+            </wo:WCTableRow>
+        </wo:WCTableRows>
+    </wo:WCTable>
+</wo:WCPageModule>
+</wo:if>
+
+<wo:WCPageModule title="Results from Completed Batch Actions" id="batchResultContainer">
+<wo:if condition="$batchResultDisplayGroup.allObjects.count">
+    <wo name="BatchResultTable">
+        <wo:WCTableHeadings>
+            <wo:WCTableHeading title="Description" sortOnKeyPaths="description"/>
+            <wo:WCTableHeading title="Date" sortOnKeyPaths="completedTime"/>
+        </wo:WCTableHeadings>
+        <wo:WCTableRows item="$batchResult">
+            <wo:WCTableRow>
+                <td><wo:WCLink string="$batchResult.description" action="$viewBatchResult"/></td>
+                <td><wo:str value="$batchResult.completedTime" formatter="$session.timeFormatter"/></td>
+            </wo:WCTableRow>
+        </wo:WCTableRows>
+    </wo>
+    <wo:WCButton label="Delete Selected Results">
+        <script type="dojo/connect" event="onClick" args="evt">
+            webcat.confirm({
+                title: "Confirm Delete",
+                message: "Are you sure you want to delete the selected " +
+                    " batch results? This operation cannot be undone.",
+                onYes: function() { deleteSelectedResults(); }
+            });
+        </script>
+    </wo>
+    <wo name="DeleteResultsAction"/>
+</wo:if><wo:else>
+    <p>There are currently no <b>completed batch action results</b> available for you to view.</p>
+</wo:else>
+</wo:WCPageModule>
+
+<wo:WCPageModule title="Batch Actions Available for Web-based Installation" open="false">
+<wo:if condition="$newPlugins.count">
+<wo:loop list="$newPlugins" item="$feature">
+
+  <p style="margin-bottom:0">
+  <wo:WCLink action="$downloadNew" title="install now"><wo:str value=="$feature.name"/></wo:WCLink>
+  (<wo:if condition="~feature.getProperty('displayableName')"><wo:str value="~feature.getProperty('displayableName')"/>,
+  </wo:if>v.<wo:str value="$feature.currentVersion"/>,
+  date: <wo:str value="$feature.versionDate"/><wo:if condition="~feature.getProperty('author')">,
+  by <wo:str value="~feature.getProperty('author')"/></wo:if>)
+  </p>
+  <p style="margin-left: 2em;">
+    <wo:if condition="$feature.description">
+      <wo:str value="$feature.description"/><br/>
+    </wo:if>
+
+    URL: <wo:if condition="~feature.getProperty('info.url')"><wo:link href="~feature.getProperty('info.url')" string="~feature.getProperty('info.url')"/></wo:if>
+    <wo:if condition="~feature.getProperty('history.url')">(<wo:link href="~feature.getProperty('history.url')">history</wo:link>)</wo:if><br/>
+    Provider: <wo:if condition="~feature.getProperty('provider')"><wo:str value="~feature.getProperty('provider')"/>
+      (<wo:str value="$feature.provider.url.toString"/>)
+    </wo:if>
+    <wo:else><wo:str value="$feature.provider.name"/></wo:else><br/>
+</p>
+
+</wo:loop></wo:if><wo:else>
+<p>After scanning known providers, no new plug-ins were detected.</p>
+</wo:else>
+<p>Add provider URL:
+<wo:WOTextField value="$providerURL" size="$70"/>
+<wo:WCButton label="Scan Now" action="$scanNow"/>
+</p>
+</wo:WCPageModule>
+
+<wo:WCPageModule title="Upload a New Batch Action Plug-in" open="false">
+<p>
+Upload a new plug-in: <wo name="PluginUpload"/>
+</p>
+<p><wo name="Upload"/></p>
+<p>
+A plug-in is packaged as a zip or jar file that contains meta-data describing
+the plug-in's capabilities and configuration scheme.
+</p>
+</wo:WCPageModule>
+
+</wo:WCForm>
+</wo:WCPageWithNavigation>

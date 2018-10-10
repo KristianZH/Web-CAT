@@ -1,0 +1,101 @@
+Page : org.webcat.core.WCPageWithNavigation {
+    title = "Batch Plug-in Library";
+}
+
+Form : WCForm {
+    multipleSubmit = true;
+    enctype = "multipart/form-data";
+}
+
+Date: WOString {
+    dateformat = "%m/%d/%y %I:%M%p";
+    value      = batchPlugin.lastModified;
+}
+
+DownloadNow: WOActiveImage {
+    border    = "0";
+    filename  = "icons/download.gif";
+    framework = "Core";
+    height    = "18";
+    width     = "18";
+    alt       = "Download this plug-in";
+    title     = "Download this plug-in";
+    action    = download;
+}
+
+EditFiles: WOActiveImage {
+    border    = "0";
+    filename  = "icons/explore.gif";
+    framework = "Core";
+    height    = "15";
+    width     = "15";
+    alt       = "Browse/edit plug-in files";
+    title     = "Browse/edit plug-in files";
+    action    = editFiles;
+}
+
+EditGlobalOptions: WOActiveImage {
+    border    = "0";
+    filename  = "icons/edit.gif";
+    framework = "Core";
+    height    = "17";
+    width     = "18";
+    alt       = "Configure global settings";
+    title     = "Configure global settings";
+    action    = editGlobalSettings;
+}
+
+PluginUpload: WOFileUpload {
+    dojoType = "dojox.form.FileInput";
+    data     = uploadedData;
+    filePath = uploadedName;
+    size     = 60;
+}
+
+Publish: WOActiveImage {
+    border    = "0";
+    filename  = "icons/show.gif";
+    framework = "Grader";
+    height    = "11";
+    width     = "11";
+    alt       = "Publish plug-in (make visible to others)";
+    title     = "Publish plug-in (make visible to others)";
+    action    = togglePublished;
+}
+
+ReloadConfig: WOActiveImage {
+    border    = "0";
+    filename  = "icons/reload.png";
+    framework = "Grader";
+    height    = "20";
+    width     = "20";
+    alt       = "Reparse plug-in metadata";
+    title     = "Reparse plug-in metadata";
+    action    = reloadPluginDefinition;
+}
+
+TerseDescriptions: WCButton {
+    label  = "Hide Descriptions";
+    action = toggleVerboseDescriptions;
+}
+
+Unpublish: WOActiveImage {
+    border    = "0";
+    filename  = "icons/hide.gif";
+    framework = "Grader";
+    height    = "11";
+    width     = "11";
+    alt       = "Unpublish plug-in (hide from others)";
+    title     = "Unpublish plug-in (hide from others)";
+    action    = togglePublished;
+}
+
+Upload: WCButton {
+    label = "Upload File & Install";
+    action = upload;
+}
+
+VerboseDescriptions: WCButton {
+    label  = "Show Descriptions";
+    action = toggleVerboseDescriptions;
+}

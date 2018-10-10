@@ -1,0 +1,113 @@
+{
+    attributes = (
+        {name = id; prototypeName = id; }, 
+        {columnName = authorId; name = authorId; prototypeName = foreignId; }, 
+        {
+            columnName = configDescription; 
+            name = configDescription; 
+            prototypeName = mutableDictionary; 
+            userInfo = {
+                adaptorValueConversionMethodName = archiveData; 
+                isMutable = true; 
+                valueClassName = "org.webcat.core.MutableDictionary"; 
+                valueFactoryMethodName = objectWithArchiveData; 
+            }; 
+        }, 
+        {
+            columnName = defaultConfigSettings; 
+            name = defaultConfigSettings; 
+            prototypeName = mutableDictionary; 
+            userInfo = {
+                adaptorValueConversionMethodName = archiveData; 
+                isMutable = true; 
+                valueClassName = "org.webcat.core.MutableDictionary"; 
+                valueFactoryMethodName = objectWithArchiveData; 
+            }; 
+        }, 
+        {
+            columnName = globalConfigSettings; 
+            name = globalConfigSettings; 
+            prototypeName = mutableDictionary; 
+            userInfo = {
+                adaptorValueConversionMethodName = archiveData; 
+                isMutable = true; 
+                valueClassName = "org.webcat.core.MutableDictionary"; 
+                valueFactoryMethodName = objectWithArchiveData; 
+            }; 
+        }, 
+        {
+            columnName = isPublished; 
+            name = isPublished; 
+            prototypeName = boolean; 
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
+        }, 
+        {columnName = lastModified; name = lastModified; prototypeName = dateTime; }, 
+        {columnName = mainFileName; name = mainFileName; prototypeName = tinyText; }, 
+        {columnName = name; name = name; prototypeName = tinyText; }, 
+        {columnName = subdirName; name = subdirName; prototypeName = tinyText; }, 
+        {
+            name = updateMutableFields; 
+            prototypeName = updateMutableFields; 
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
+        }, 
+        {
+            columnName = uploadedFileName; 
+            name = uploadedFileName; 
+            prototypeName = tinyText; 
+        }, 
+        {columnName = batchEntity; name = batchEntity; prototypeName = tinyText; }
+    ); 
+    attributesUsedForLocking = (
+        authorId, 
+        batchEntity, 
+        isPublished, 
+        mainFileName, 
+        name, 
+        subdirName, 
+        updateMutableFields, 
+        uploadedFileName
+    ); 
+    className = "org.webcat.batchprocessor.BatchPlugin"; 
+    classProperties = (
+        author, 
+        batchEntity, 
+        batchJobs, 
+        batchResults, 
+        configDescription, 
+        defaultConfigSettings, 
+        globalConfigSettings, 
+        isPublished, 
+        lastModified, 
+        mainFileName, 
+        name, 
+        subdirName, 
+        updateMutableFields, 
+        uploadedFileName
+    ); 
+    externalName = BatchPlugin; 
+    name = BatchPlugin; 
+    primaryKeyAttributes = (id); 
+    relationships = (
+        {
+            destination = User; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = authorId; }); 
+            name = author; 
+        }, 
+        {
+            destination = BatchJob; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = batchPluginId; sourceAttribute = id; }); 
+            name = batchJobs; 
+        }, 
+        {
+            destination = BatchResult; 
+            isToMany = Y; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = batchPluginId; sourceAttribute = id; }); 
+            name = batchResults; 
+        }
+    ); 
+}

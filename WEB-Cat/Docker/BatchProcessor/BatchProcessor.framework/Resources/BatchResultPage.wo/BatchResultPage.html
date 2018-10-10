@@ -1,0 +1,29 @@
+<wo name="Page">
+<wo:WCPageModule title="Batch Action Information">
+    <wo:WCStyledTable>
+        <tr class="o">
+            <td><b>Description:</b></td>
+            <td><wo:str value="$result.description"/></td>
+        </tr>
+        <tr class="e">
+            <td><b>Date:</b></td>
+            <td><wo:str value="$result.completedTime" formatter="$session.timeFormatter"/>
+              (Requested by <wo:str value="$result.user"/>
+              using <wo:str value="$result.batchPlugin.name"/>)</td>
+        </tr>
+    </wo:WCStyledTable>
+</wo:WCPageModule>
+<wo:if condition="$result.isComplete">
+  <wo:loop list="$feedbackSections" item="$feedbackSection">
+    <wo:WCPageModule title="$feedbackSection.title" open="~!feedbackSection.isCollapsed">
+      <wo:org.webcat.grader.PartialInlineReport
+        file="$feedbackSection.feedbackFile"
+        styleVersion="$1"
+        baseUrl="$feedbackSectionBaseURL"/>
+    </wo:WCPageModule>
+  </wo:loop>
+</wo:if>
+<wo:WCPageModule title="Generated Result Files" dynamic="true" open="false" id="fileBrowserModule">
+    <wo:org.webcat.core.FileBrowser file="$result.resultDir" initialExpansionDepth="$1"/>
+</wo:WCPageModule>
+</wo>

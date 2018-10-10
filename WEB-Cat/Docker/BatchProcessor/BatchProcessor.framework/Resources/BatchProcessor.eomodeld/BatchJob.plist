@@ -1,0 +1,199 @@
+{
+    attributes = (
+        {
+            columnName = batchedObjectIds; 
+            name = batchedObjectIds; 
+            prototypeName = mutableArray; 
+            userInfo = {
+                adaptorValueConversionMethodName = archiveData; 
+                isMutable = true; 
+                valueClassName = "org.webcat.core.MutableArray"; 
+                valueFactoryMethodName = objectWithArchiveData; 
+            }; 
+        }, 
+        {columnName = batchPluginId; name = batchPluginId; prototypeName = foreignId; }, 
+        {columnName = batchResultId; name = batchResultId; prototypeName = foreignId; }, 
+        {
+            columnName = configSettings; 
+            name = configSettings; 
+            prototypeName = mutableDictionary; 
+            userInfo = {
+                adaptorValueConversionMethodName = archiveData; 
+                isMutable = true; 
+                valueClassName = "org.webcat.core.MutableDictionary"; 
+                valueFactoryMethodName = objectWithArchiveData; 
+            }; 
+        }, 
+        {columnName = currentState; name = currentState; prototypeName = tinyText; }, 
+        {columnName = description; name = description; prototypeName = mediumText; }, 
+        {
+            allowsNull = N; 
+            definition = "jobBase.enqueueTime"; 
+            name = enqueueTime; 
+            prototypeName = dateTime; 
+        }, 
+        {allowsNull = N; name = id; prototypeName = id; valueType = i; }, 
+        {
+            columnName = indexOfNextObject; 
+            name = indexOfNextObject; 
+            prototypeName = integer; 
+            userInfo = {
+                isScalar = true; 
+                scalarConversionMethodName = intValue; 
+                scalarDefault = 0; 
+                type = int; 
+                valueClassName = Integer; 
+            }; 
+        }, 
+        {
+            definition = "jobBase.isCancelled"; 
+            name = isCancelled; 
+            prototypeName = boolean; 
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
+        }, 
+        {
+            columnName = isInIteration; 
+            name = isInIteration; 
+            prototypeName = boolean; 
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
+        }, 
+        {
+            definition = "jobBase.isReady"; 
+            name = isReady; 
+            prototypeName = boolean; 
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
+        }, 
+        {columnName = objectQueryId; name = objectQueryId; prototypeName = foreignId; }, 
+        {
+            definition = "jobBase.priority"; 
+            name = priority; 
+            prototypeName = integer; 
+            userInfo = {
+                isScalar = true; 
+                scalarConversionMethodName = intValue; 
+                scalarDefault = 0; 
+                type = int; 
+                valueClassName = Integer; 
+            }; 
+        }, 
+        {
+            definition = "jobBase.progress"; 
+            name = progress; 
+            prototypeName = double; 
+            userInfo = {
+                isScalar = true; 
+                scalarConversionMethodName = doubleValue; 
+                scalarDefault = "0.0"; 
+                type = double; 
+                valueClassName = Double; 
+            }; 
+        }, 
+        {
+            definition = "jobBase.progressMessage"; 
+            name = progressMessage; 
+            prototypeName = mediumText; 
+        }, 
+        {
+            definition = "jobBase.scheduledTime"; 
+            name = scheduledTime; 
+            prototypeName = dateTime; 
+        }, 
+        {
+            columnName = stateAfterIteration; 
+            name = stateAfterIteration; 
+            prototypeName = tinyText; 
+        }, 
+        {
+            definition = "jobBase.suspensionReason"; 
+            name = suspensionReason; 
+            prototypeName = mediumText; 
+        }, 
+        {
+            name = updateMutableFields; 
+            prototypeName = updateMutableFields; 
+            userInfo = {isScalar = true; scalarDefault = false; type = boolean; }; 
+        }, 
+        {definition = "jobBase.userId"; name = userId; prototypeName = foreignId; }, 
+        {definition = "jobBase.workerId"; name = workerId; prototypeName = foreignId; }
+    ); 
+    attributesUsedForLocking = (
+        batchPluginId, 
+        batchResultId, 
+        currentState, 
+        description, 
+        indexOfNextObject, 
+        isCancelled, 
+        isInIteration, 
+        isReady, 
+        objectQueryId, 
+        priority, 
+        progressMessage, 
+        stateAfterIteration, 
+        suspensionReason, 
+        updateMutableFields, 
+        userId, 
+        workerId
+    ); 
+    className = "org.webcat.batchprocessor.BatchJob"; 
+    classProperties = (
+        batchedObjectIds, 
+        batchPlugin, 
+        batchResult, 
+        configSettings, 
+        currentState, 
+        description, 
+        enqueueTime, 
+        indexOfNextObject, 
+        isCancelled, 
+        isInIteration, 
+        isReady, 
+        objectQuery, 
+        priority, 
+        progress, 
+        progressMessage, 
+        scheduledTime, 
+        stateAfterIteration, 
+        suspensionReason, 
+        updateMutableFields, 
+        user, 
+        worker
+    ); 
+    externalName = BatchJob; 
+    fetchSpecificationDictionary = {}; 
+    name = BatchJob; 
+    parent = JobBase; 
+    primaryKeyAttributes = (id); 
+    relationships = (
+        {
+            destination = BatchPlugin; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = batchPluginId; }); 
+            name = batchPlugin; 
+        }, 
+        {
+            destination = BatchResult; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = batchResultId; }); 
+            name = batchResult; 
+        }, 
+        {
+            destination = JobBase; 
+            isMandatory = Y; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = id; }); 
+            name = jobBase; 
+        }, 
+        {
+            destination = ObjectQuery; 
+            isToMany = N; 
+            joinSemantic = EOInnerJoin; 
+            joins = ({destinationAttribute = id; sourceAttribute = objectQueryId; }); 
+            name = objectQuery; 
+        }, 
+        {definition = "jobBase.user"; name = user; }, 
+        {definition = "jobBase.worker"; name = worker; }
+    ); 
+}

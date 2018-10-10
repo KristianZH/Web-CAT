@@ -1,0 +1,13 @@
+<project name="antzip" default="addtozip">
+
+  <target name="addtozip">
+    <zip
+      destfile="${zip.file}"
+      update="true"
+      level="9"
+      >
+      <zipfileset file="${source.file.name}" fullpath="${dest.file.name}"/>
+    </zip>
+  </target>
+
+</project>

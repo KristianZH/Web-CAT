@@ -1,0 +1,62 @@
+Page : org.webcat.core.WCPageWithNavigation {
+    title = "View Batch Results";
+}
+
+Form : WCForm {
+    multipleSubmit = true;
+}
+
+BatchJobTable: WCTable {
+    displayGroup = batchJobDisplayGroup;
+}
+
+ViewBatchProgress: WCLink {
+    string = batchJob.description;
+    action = viewBatchProgress;
+}
+
+JobTitleColumn: WCTableHeading {
+    title = "Job Description";
+    sortOnKeyPaths = "description";
+}
+
+JobQueueTimeColumn: WCTableHeading {
+    title = "Requested at";
+    sortOnKeyPaths = "enqueueTime";
+}
+
+JobProgressColumn: WCTableHeading {
+    title = "Progress";
+}
+
+BatchResultTable: WCTable {
+    id = "batchResultContainer";
+    displayGroup = batchResultDisplayGroup;
+    canSelectRows = true;
+    multipleSelection = true;
+}
+
+TitleColumn: WCTableHeading {
+    title = "Batch Description";
+    sortOnKeyPaths = "description";
+}
+
+ViewBatchResult: WCLink {
+    string = batchResult.description;
+    action = viewBatchResult;
+}
+
+CompletedTimeColumn: WCTableHeading {
+    title = "Completed at";
+    sortOnKeyPaths = "completedTime";
+}
+
+DeleteResults: WCButton {
+    label = "Delete Selected Results";
+}
+
+DeleteResultsAction: WCActionFunction {
+    jsId = "deleteSelectedResults";
+    action = deleteSelectedResults;
+    remote = true;
+}

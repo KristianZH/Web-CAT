@@ -1,0 +1,49 @@
+<wo name="BasePage">
+<wo:if condition="$includePageWrapping"><div id="header">
+  <div class="title width25 floatLeft">
+    <h1>Web-CAT</h1>
+    <h2>Automatic grading<br/>using student-written tests</h2>
+  </div>
+
+  <div id="utils">
+    <a href="http://grader.sapera.org/WebObjects/Web-CAT.woa/leaderboard">leaderboard</a> |
+    <wo:link action="$goToProfile">settings</wo:link> |
+    <wo:link action="$goToFeedback">feedback</wo:link> |
+    <wo:link action="$logout">logout</wo:link>
+  </div>
+
+  <wo name="HasMultipleRoles"><div id="roles">choose role:
+    <wo:loop list="$session.tabs.children" item="$aRole" index="$aRoleIndex">
+      <wo name="RoleIsVisible">
+        <wo name="IsNotFirstRole">|</wo>
+        <wo:if condition="~selectedRole.equals(aRole)"><span class="here"><wo:str value="$aRole.label"/></span></wo:if>
+        <wo:else>
+        <wo:link action="$switchRole"><wo:str value="$aRole.label"/></wo:link>
+        </wo:else>
+      </wo>
+    </wo:loop>
+  </div></wo>
+
+  <div id="mainMenudiv">
+    <ul id="mainMenu" class="floatRight">
+      <wo:loop list="$selectedRole.children" item="$primaryTabItem">
+        <wo:if condition="$primaryTabIsVisible"><wo name="PrimaryTab">
+          <wo:link action="$primaryTabLink"><wo:str value="$primaryTabItem.label"/><wo:if condition="$hasVisibleSecondaryTabs"><span class="double-arrow">  &#187;</span></wo:if></wo:link>
+          <wo:if condition="$hasVisibleSecondaryTabs">
+            <ul><wo:loop list="$primaryTabItem.children" item="$secondaryTabItem">
+              <wo:if condition="$secondaryTabIsVisible"><wo name="SecondaryTab">
+                <wo:link action="$secondaryTabLink" string="$secondaryTabItem.label"/>
+              </wo></wo:if>
+            </wo:loop></ul>
+          </wo:if>
+        </wo></wo:if>
+      </wo:loop>
+    </ul>
+  </div>
+</div>
+</wo:if><div id="content" class="clearfix"><div id="page"><div class="width100 floatRight">
+<wo:if condition="$hasTitle"><div class="module title">
+  <wo:if condition="$permalink"><wo:link href="$permalink" class="permalink floatRight">Permalink</wo:link></wo:if>
+  <h1><wo:str value="$title"/></h1></div></wo:if>
+<webobject name="Errors"/><wo:content/>
+</div></div></div><wo:if condition="$includePageWrapping"><wo:org.webcat.core.Footer/></wo:if></wo>

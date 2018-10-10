@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webcat-node
+  labels:
+    app: webcat-node
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: webcat-node
+  template:
+    metadata:
+      labels:
+        run: webcat-node
+    spec:
+      containers:
+      - name: webcat-node
+        image: 333666999/webcat:v555
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: webcat-data
+          mountPath: /usr/web-cat-storage/
+      volumes:
+      - name: webcat-data
+        persistentVolumeClaim:
+          claimName: webcat-pvc

@@ -1,0 +1,53 @@
+{
+    EOModelVersion = "2.1"; 
+    adaptorName = JDBC; 
+    connectionDictionary = {
+        URL = ""; 
+        driver = "com.mysql.jdbc.Driver"; 
+        password = ""; 
+        plugin = MySQL; 
+        username = ""; 
+    }; 
+    entities = (
+        {
+            className = "org.webcat.batchprocessor.BatchFeedbackSection"; 
+            name = BatchFeedbackSection; 
+        }, 
+        {
+            className = "org.webcat.batchprocessor.BatchJob"; 
+            name = BatchJob; 
+            parent = JobBase; 
+        }, 
+        {className = "org.webcat.batchprocessor.BatchPlugin"; name = BatchPlugin; }, 
+        {className = "org.webcat.batchprocessor.BatchResult"; name = BatchResult; }, 
+        {
+            className = "org.webcat.batchprocessor.BatchResultProperty"; 
+            name = BatchResultProperty; 
+        }
+    ); 
+    internalInfo = {
+        "_schemaSynchronizationOptions" = {
+            EOSchemaSynchronizationForeignKeyConstraintsKey = YES; 
+            EOSchemaSynchronizationPrimaryKeyConstraintsKey = YES; 
+            EOSchemaSynchronizationPrimaryKeySupportKey = YES; 
+        }; 
+    }; 
+    userInfo = {
+        "_EntityModeler" = {
+            activeDatabaseConfigName = Default; 
+            databaseConfigs = {
+                Default = {
+                    adaptorName = JDBC; 
+                    connectionDictionary = {
+                        URL = ""; 
+                        driver = "com.mysql.jdbc.Driver"; 
+                        password = ""; 
+                        plugin = MySQL; 
+                        username = ""; 
+                    }; 
+                    prototypeEntityName = EOJDBCPrototypes; 
+                }; 
+            }; 
+        }; 
+    }; 
+}

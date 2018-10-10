@@ -1,0 +1,63 @@
+<wo name="Page"><wo name="Form">
+
+<wo:if condition="$batchJobDisplayGroup.allObjects.count">
+<wo:WCPageModule title="Batch Jobs Currently in Queue">
+    <p>The following batch jobs are either currently running or in the queue.</p>
+    <wo name="BatchJobTable">
+        <wo:WCTableHeadings>
+            <wo name="JobTitleColumn"/>
+            <wo name="JobQueueTimeColumn"/>
+            <wo name="JobProgressColumn"/>
+        </wo:WCTableHeadings>
+        <wo:WCTableRows item="$batchJob">
+            <wo:WCTableRow>
+                <td>
+                    <wo name="ViewBatchProgress"/>
+                    <wo:not condition="$batchJob.isReady">
+                       <span style="color: red">(suspended)</span>
+                    </wo:not>
+                </td>
+                <td><wo:str value="$batchJob.enqueueTime" formatter="$session.timeFormatter"/></td>
+                <td><wo:str value="$batchJob.progressPercentage"/>%</td>
+            </wo:WCTableRow>
+        </wo:WCTableRows>
+    </wo>
+</wo:WCPageModule>
+</wo:if>
+
+<wo:WCPageModule title="Previously Run Batch Results">
+<wo:WCContentPane id="resultModule">
+<wo:if condition="$batchResultDisplayGroup.allObjects.count">
+    <p>Click on a previously run batch job to view its results.</p>
+    <wo name="BatchResultTable">
+        <wo:WCTableHeadings>
+            <wo name="TitleColumn"/>
+            <th></th>
+            <wo name="CompletedTimeColumn"/>
+        </wo:WCTableHeadings>
+        <wo:WCTableRows item="$batchResult">
+            <wo:WCTableRow>
+                <td><wo name="ViewBatchResult"/></td>
+                <td style="font-size: smaller">(<wo:str value="$batchResult.batchPlugin.name"/> v<wo:str value="$batchResult.batchPlugin.descriptor.currentVersion"/>)</td>
+                <td><wo:str value="$batchResult.completedTime" formatter="$session.timeFormatter"/></td>
+            </wo:WCTableRow>
+        </wo:WCTableRows>
+    </wo>
+    <wo name="DeleteResults">
+        <script type="dojo/connect" event="onClick" args="evt">
+            webcat.confirm({
+                title: "Confirm Delete",
+                message: "Are you sure you want to delete the selected " +
+                    " batch results? This operation cannot be undone.",
+                onYes: function() { deleteSelectedResults(); }
+            });
+        </script>
+    </wo>
+    <wo name="DeleteResultsAction"/>
+</wo:if><wo:else>
+    <p>There are currently no <b>completed batch results</b> available for you to view.</p>
+</wo:else>
+</wo>
+</wo:WCPageModule>
+
+</wo></wo>
