@@ -1638,7 +1638,7 @@ CREATE TABLE `TSUBMISSIONRESULT` (
   `studentReportStyleVersion` int(11) DEFAULT NULL,
   `staffReportStyleVersion` int(11) DEFAULT NULL,
   PRIMARY KEY (`OID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1815,7 +1815,7 @@ CREATE TABLE `TUSER` (
 
 LOCK TABLES `TUSER` WRITE;
 /*!40000 ALTER TABLE `TUSER` DISABLE KEYS */;
-INSERT INTO `TUSER` VALUES (100,1,'vellev@gmail.com',NULL,1,NULL,'f42921fec2f3589eb335db1da7f95df6c9e4306beb1397d5',_binary '¨\Ì\0sr\0!org.webcat.core.MutableDictionary\0cB\Õ\Z2†\0Z\0\nhasChangedL\0parentt\0\"Lorg/webcat/core/MutableContainer;xr\0-er.extensions.foundation.ERXMutableDictionarypJ#S~\Î\Óî\0\0xr\0-com.webobjects.foundation.NSMutableDictionary\\\⁄92aF¯\0\0xr\0&com.webobjects.foundation.NSDictionary(\rº\ƒlXé\0[\0keyst\0[Ljava/lang/Object;[\0objectsq\0~\0xpur\0[Ljava.lang.Object;ê\ŒXüs)l\0\0xp\0\0\0\0uq\0~\0\0\0\0\0x\0p',NULL,_binary '',NULL,'stoyo',NULL,'9b063e522ac617795b4242e8e3c152f9df9d7e3cba817285',1000);
+INSERT INTO `TUSER` VALUES (100,1,'dummymail@mail.com',NULL,1,NULL,'f42921fec2f3589eb335db1da7f95df6c9e4306beb1397d5',_binary '¨\Ì\0sr\0!org.webcat.core.MutableDictionary\0cB\Õ\Z2†\0Z\0\nhasChangedL\0parentt\0\"Lorg/webcat/core/MutableContainer;xr\0-er.extensions.foundation.ERXMutableDictionarypJ#S~\Î\Óî\0\0xr\0-com.webobjects.foundation.NSMutableDictionary\\\⁄92aF¯\0\0xr\0&com.webobjects.foundation.NSDictionary(\rº\ƒlXé\0[\0keyst\0[Ljava/lang/Object;[\0objectsq\0~\0xpur\0[Ljava.lang.Object;ê\ŒXüs)l\0\0xp\0\0\0\0uq\0~\0\0\0\0\0x\0p',NULL,_binary '',NULL,'stoyo',NULL,'9b063e522ac617795b4242e8e3c152f9df9d7e3cba817285',1000);
 /*!40000 ALTER TABLE `TUSER` ENABLE KEYS */;
 UNLOCK TABLES;
 
