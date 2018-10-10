@@ -1,6 +1,6 @@
 # webcat
 
-##Prerequisites
+## Prerequisites
 1. navigate to Web-CAT/WEB-Cat/Docker/
 2. open config/configuration.properties and set the following fields: 
 	'dbConnectPasswordGLOBAL' , 'coreAdminEmail' , 'dbConnectUserGLOBAL' , 'AdminUsername'
