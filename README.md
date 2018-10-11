@@ -7,7 +7,7 @@
 3. open postfix-stuff/sasl_passwd and set marked mail:passwoed field
 4. open Dockerfile and set the fields 'ENV JDBC_USERNAME' , 'ENV JDBC_PASSWORD'.
 5. In Dockerfile set also the marked field 'Email' from the postfix instalation.
-6. navigate to Web-CAT/kubernetes-yaml's/mysql and set the marked fields, with base64 encoding.
+6. navigate to Web-CAT/kubernetes-yaml's/mysql/secrets.yaml and set the marked fields, with base64 encoding.
 
 ## Install WEB-Cat
 
