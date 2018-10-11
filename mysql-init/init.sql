@@ -329,13 +329,13 @@ LOCK TABLES `EnergyBarEvent` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `LISRESULTID`
+-- Table structure for table `LISResultId`
 --
 
-DROP TABLE IF EXISTS `LISRESULTID`;
+DROP TABLE IF EXISTS `LISResultId`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `LISRESULTID` (
+CREATE TABLE `LISResultId` (
   `OID` int(11) NOT NULL,
   `assignmentOfferingId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
@@ -349,12 +349,12 @@ CREATE TABLE `LISRESULTID` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `LISRESULTID`
+-- Dumping data for table `LISResultId`
 --
 
-LOCK TABLES `LISRESULTID` WRITE;
-/*!40000 ALTER TABLE `LISRESULTID` DISABLE KEYS */;
-/*!40000 ALTER TABLE `LISRESULTID` ENABLE KEYS */;
+LOCK TABLES `LISResultId` WRITE;
+/*!40000 ALTER TABLE `LISResultId` DISABLE KEYS */;
+/*!40000 ALTER TABLE `LISResultId` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
