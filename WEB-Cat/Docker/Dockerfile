@@ -3,8 +3,6 @@ FROM tomcat:9.0.11-jre8
 
 #Environment variables
 ENV DEBIAN_FRONTEND noninteractive
-ENV JDBC_USERNAME <Username>
-ENV JDBC_PASSWORD <Password>
 
 #Expose Port 80
 EXPOSE 80

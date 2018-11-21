@@ -22,6 +22,17 @@ spec:
         volumeMounts:
         - name: webcat-data
           mountPath: /usr/web-cat-storage/
+        env:
+        - name: JDBC_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: database-secret-config
+              key: custom-db-username
+        - name: JDBC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: database-secret-config
+              key: custom-db-password
       volumes:
       - name: webcat-data
         persistentVolumeClaim:
