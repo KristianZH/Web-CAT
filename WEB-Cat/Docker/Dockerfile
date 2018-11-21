@@ -3,8 +3,6 @@ FROM tomcat:9.0.11-jre8
 
 #Environment variables
 ENV DEBIAN_FRONTEND noninteractive
-ENV JDBC_USERNAME <Username>
-ENV JDBC_PASSWORD <Password>
 
 #Expose Port 80
 EXPOSE 80
@@ -25,8 +23,8 @@ RUN apt-get update; apt-get install build-essential -y ; \
 	cp -r /root/perl5/perlbrew/perls/perl-5.28.0/lib/site_perl/5.28.0/URI /usr/share/perl/5.24/
 	
 #Install java
-RUN cd /usr/lib/jvm && wget --no-check-certificate -c --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/11+28/55eed80b163941c8885ad9298e6d786a/jdk-11_linux-x64_bin.tar.gz
-RUN	cd /usr/lib/jvm && tar xfz jdk-11_linux-x64_bin.tar.gz
+RUN cd /usr/lib/jvm && wget -c --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/11.0.1+13/90cf5d8f270a4347a95050320eef3fb7/jdk-11.0.1_linux-x64_bin.tar.gz
+RUN	cd /usr/lib/jvm && tar xfz jdk-11.0.1_linux-x64_bin.tar.gz
 	
 #Copy JavaTddPlugin and BatchPlugin
 COPY JavaTddPlugin /plugins/

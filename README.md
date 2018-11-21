@@ -5,9 +5,8 @@
 2. open config/configuration.properties and set the following fields: 
 	'dbConnectPasswordGLOBAL' , 'coreAdminEmail' , 'dbConnectUserGLOBAL' , 'AdminUsername'
 3. open postfix-stuff/sasl_passwd and set marked mail:passwoed field
-4. open Dockerfile and set the fields 'ENV JDBC_USERNAME' , 'ENV JDBC_PASSWORD'.
-5. In Dockerfile set also the marked field 'Email' from the postfix instalation.
-6. navigate to Web-CAT/kubernetes-yaml's/mysql/secrets.yaml and set the marked fields, with base64 encoding.
+4. In Dockerfile set also the marked field 'Email' from the postfix instalation.
+5. navigate to Web-CAT/kubernetes-yaml's/mysql/secrets.yaml and set the marked fields, with base64 encoding.
 
 ## Install WEB-Cat
 
@@ -21,7 +20,7 @@
 8. navigate to Web-CAT/mysql-init
 9. kubectl cp init.sql mysql-0:/
 10. kubectl exec -it mysql-0 -- bash
-11. mysql -u stoyo -pSkywalker76 webcat < "init.sql"; exit; exit;
+11. mysql -u <-username-> -p<-password-> <-dbname-> < "init.sql"; exit; exit;
 12. navigate to WEB-CAT-Grader/kubernetes-yaml's/Web-CAT
 13. kubectl create -f data-pvc.yaml
 14. kubectl create -f webcat-node.yaml
@@ -37,9 +36,10 @@
 2. eval "$(docker-machine env <-docker-machine-name->)"
 3. docker login -u <-dockerhubName-> -p <-dockerhubPassword->
 4. navigate to WEB-CAT-Grader/WEB-Cat/Docker
-5. docker build -t webcat:v2 <-dockerhubName->/webcat:v<-container-version->
-6. docker push <-dockerhubName->/webcat:v<-container-version->
-7. kubectl set image deployments/webcat-node webcat-node=<-dockerhubName->/webcat:v<-container-version->
+5. docker build -t webcat:v2 .
+6. docker tag webcat:v2 <-dockerhubName->/webcat:v<-container-version->
+7. docker push <-dockerhubName->/webcat:v<-container-version->
+8. kubectl set image deployments/webcat-node webcat-node=<-dockerhubName->/webcat:v<-container-version->
 
 ## Edit Leaderboard 
 
