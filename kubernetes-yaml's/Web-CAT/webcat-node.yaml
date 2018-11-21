@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: webcat-node
-        image: 333666999/webcat:v555
+        image: 333666999/webcat:v559
         ports:
         - containerPort: 80
         volumeMounts:

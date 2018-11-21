@@ -36,9 +36,10 @@
 2. eval "$(docker-machine env <-docker-machine-name->)"
 3. docker login -u <-dockerhubName-> -p <-dockerhubPassword->
 4. navigate to WEB-CAT-Grader/WEB-Cat/Docker
-5. docker build -t webcat:v2 <-dockerhubName->/webcat:v<-container-version->
-6. docker push <-dockerhubName->/webcat:v<-container-version->
-7. kubectl set image deployments/webcat-node webcat-node=<-dockerhubName->/webcat:v<-container-version->
+5. docker build -t webcat:v2 .
+6. docker tag webcat:v2 <-dockerhubName->/webcat:v<-container-version->
+7. docker push <-dockerhubName->/webcat:v<-container-version->
+8. kubectl set image deployments/webcat-node webcat-node=<-dockerhubName->/webcat:v<-container-version->
 
 ## Edit Leaderboard 
 
