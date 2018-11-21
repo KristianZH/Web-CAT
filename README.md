@@ -20,7 +20,7 @@
 8. navigate to Web-CAT/mysql-init
 9. kubectl cp init.sql mysql-0:/
 10. kubectl exec -it mysql-0 -- bash
-11. mysql -u stoyo -pSkywalker76 webcat < "init.sql"; exit; exit;
+11. mysql -u <-username-> -p<-password-> <-dbname-> < "init.sql"; exit; exit;
 12. navigate to WEB-CAT-Grader/kubernetes-yaml's/Web-CAT
 13. kubectl create -f data-pvc.yaml
 14. kubectl create -f webcat-node.yaml
