@@ -1,12 +1,10 @@
 # webcat
 
 ## Prerequisites
-1. navigate to Web-CAT/WEB-Cat/Docker/
-2. open config/configuration.properties and set the following fields: 
+1. Navigate to Web-CAT/WEB-Cat/Docker/
+2. Open config/configuration.properties and set the following fields: 
 	'dbConnectPasswordGLOBAL' , 'coreAdminEmail' , 'dbConnectUserGLOBAL' , 'AdminUsername'
-3. open postfix-stuff/sasl_passwd and set marked mail:passwoed field
-4. In Dockerfile set also the marked field 'Email' from the postfix instalation.
-5. navigate to Web-CAT/kubernetes-yaml's/mysql/secrets.yaml and set the marked fields, with base64 encoding.
+3. Replace placeholders in `Web-CAT/kubernetes-yaml's/mysql/secrets.yaml` and `Web-CAT/kubernetes-yaml's/Web-CAT/postfix-secret.yaml` with base64 encoded values.
 
 ## Install WEB-Cat
 
@@ -22,13 +20,14 @@
 10. kubectl exec -it mysql-0 -- bash
 11. mysql -u <-username-> -p<-password-> <-dbname-> < "init.sql"; exit; exit;
 12. navigate to WEB-CAT-Grader/kubernetes-yaml's/Web-CAT
-13. kubectl create -f data-pvc.yaml
-14. kubectl create -f webcat-node.yaml
-15. kubectl create -f service.yaml
-16. copy webcat pod's name from : kubectl get po
-17. kubectl exec -it <-pod's name-> -- bash
-18. cp -r /plugins/BatchPlugin /usr/web-cat-storage/ (once per cluster)
-19. cp -r /plugins/JavaTddPlugin /usr/web-cat-storage/UserScripts/FMI/stoyo/ (once per cluster)
+13. kubectl create -f postfix-secret.yaml
+14. kubectl create -f data-pvc.yaml
+15. kubectl create -f webcat-node.yaml
+16. kubectl create -f service.yaml
+17. copy webcat pod's name from : kubectl get po
+18. kubectl exec -it <-pod's name-> -- bash
+19. cp -r /plugins/BatchPlugin /usr/web-cat-storage/ (once per cluster)
+20. cp -r /plugins/JavaTddPlugin /usr/web-cat-storage/UserScripts/FMI/stoyo/ (once per cluster)
 
 ## Push new WEB-Cat image
 
