@@ -33,6 +33,16 @@ spec:
             secretKeyRef:
               name: database-secret-config
               key: custom-db-password
+        - name: POSTFIX_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: postfix
+              key: email
+        - name: POSTFIX_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postfix
+              key: password
       volumes:
       - name: webcat-data
         persistentVolumeClaim:
