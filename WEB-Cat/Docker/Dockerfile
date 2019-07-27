@@ -1,3 +1,8 @@
+#############      jdk-provider       #############
+FROM openjdk:11.0-jdk AS jdk-provider
+
+
+#############         tomcat          #############
 FROM tomcat:9.0.11-jre8
 
 #Environment variables
@@ -20,12 +25,8 @@ RUN apt-get update; apt-get install build-essential -y ; \
 	curl -L http://xrl.us/installperlnix | bash; \
 	/root/perl5/perlbrew/build/perl-5.28.0/perl-5.28.0/utils/cpan install URI::Escape; \
 	cp -r /root/perl5/perlbrew/perls/perl-5.28.0/lib/site_perl/5.28.0/URI /usr/share/perl/5.24/
-	
-# Install java
-RUN	cd /usr/lib/jvm; \
-	wget -c --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/11.0.1+13/90cf5d8f270a4347a95050320eef3fb7/jdk-11.0.1_linux-x64_bin.tar.gz ; \
-	tar xfz jdk-11.0.1_linux-x64_bin.tar.gz ; \
-	rm -rf jdk-11.0.1_linux-x64_bin.tar.gz
+
+COPY --from=jdk-provider /usr/local/openjdk-11/ /usr/lib/jvm/openjdk-11/
 
 #Copy JavaTddPlugin and BatchPlugin
 COPY JavaTddPlugin /plugins/
