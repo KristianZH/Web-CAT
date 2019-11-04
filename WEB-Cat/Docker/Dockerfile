@@ -1,6 +1,5 @@
 #############      jdk-provider       #############
-FROM openjdk:11.0-jdk AS jdk-provider
-
+FROM amd64/openjdk:13-jdk-oracle AS jdk-provider
 
 #############         tomcat          #############
 FROM tomcat:9.0.11-jre8
@@ -26,8 +25,9 @@ RUN apt-get update; apt-get install build-essential -y ; \
 	/root/perl5/perlbrew/build/perl-5.28.0/perl-5.28.0/utils/cpan install URI::Escape; \
 	cp -r /root/perl5/perlbrew/perls/perl-5.28.0/lib/site_perl/5.28.0/URI /usr/share/perl/5.24/
 
-COPY --from=jdk-provider /usr/local/openjdk-11/ /usr/lib/jvm/openjdk-11/
-
+#Install java
+COPY --from=jdk-provider /usr/java/openjdk-13/ /usr/lib/jvm/openjdk-13/
+	
 #Copy JavaTddPlugin and BatchPlugin
 COPY JavaTddPlugin /plugins/
 COPY BatchPlugin /plugins/
@@ -41,9 +41,6 @@ RUN echo "postfix postfix/mailname string ${HOSTNAME}.localdomain" | debconf-set
 	rm /etc/postfix/main.cf
 COPY postfix-stuff /etc/postfix/
 
-#Install leaderboard
-COPY leaderboard /usr/local/tomcat/webapps/ROOT/WEB-INF/lib/
-
 #Start services
 CMD ["sh", "-c", "service syslog-ng start; \
      echo [smtp.gmail.com]:587 ${POSTFIX_EMAIL}:${POSTFIX_PASSWORD} > /etc/postfix/sasl_passwd; \
@@ -53,5 +50,5 @@ CMD ["sh", "-c", "service syslog-ng start; \
      sleep 90; \
      chmod -R 750 /usr/local/tomcat/webapps/ROOT/WEB-INF/Web-CAT.woa/Contents/Library/Frameworks/; \
      while [ ! -f /usr/local/tomcat/webapps/ROOT/WEB-INF/Web-CAT.woa/Contents/Library/Frameworks/Core.framework/Resources/WCPageWithNavigation.wo/WCPageWithNavigation.html ]; do sleep 1; done; \
-     mv /usr/local/tomcat/webapps/ROOT/WEB-INF/lib/WCPageWithNavigation.html /usr/local/tomcat/webapps/ROOT/WEB-INF/Web-CAT.woa/Contents/Library/Frameworks/Core.framework/Resources/WCPageWithNavigation.wo/; \
+     cp -r /usr/local/tomcat/webapps/ROOT/WEB-INF/Web-CAT.woa/Contents/Library/Frameworks/. /usr/local/tomcat/webapps/ROOT/; \
      tail -F /var/log/mail.log"]
